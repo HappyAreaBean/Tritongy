@@ -1,21 +1,15 @@
 package net.islandearth.languagy;
 
-<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-=======
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
->>>>>>> 64fb4f3178edb9eb6131b0c119ac1a65719b80f5
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
-<<<<<<< HEAD
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,25 +19,11 @@ import net.islandearth.languagy.commands.LanguagyCommand;
 import net.islandearth.languagy.language.Language;
 import net.islandearth.languagy.language.Translator;
 import net.islandearth.languagy.metrics.Metrics;
-=======
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.comphenix.protocol.ProtocolLibrary;
-
-import net.islandearth.languagy.commands.LanguagyCommand;
-import net.islandearth.languagy.language.Language;
-import net.islandearth.languagy.listener.ListenerPlayerLocaleEvent;
-import net.islandearth.languagy.packets.PacketListenerClientInfo;
->>>>>>> 64fb4f3178edb9eb6131b0c119ac1a65719b80f5
 
 public class Languagy extends JavaPlugin {
 	
 	private Logger log = Bukkit.getLogger();
-<<<<<<< HEAD
 	@Getter private Translator translateTester;
-=======
->>>>>>> 64fb4f3178edb9eb6131b0c119ac1a65719b80f5
 	
 	@Override
 	public void onEnable()
@@ -51,13 +31,8 @@ public class Languagy extends JavaPlugin {
 		log.info("Loading...");
 		createConfig();
 		registerCommands();
-<<<<<<< HEAD
 		startMetrics();
 		runTest();
-=======
-		registerListeners();
-		startPacketListener();
->>>>>>> 64fb4f3178edb9eb6131b0c119ac1a65719b80f5
 	}
 	
 	@Override
@@ -76,7 +51,6 @@ public class Languagy extends JavaPlugin {
 			languages.add(language.toString());
 		}
 		
-<<<<<<< HEAD
 		getConfig().addDefault("Languages.Enabled", languages);
 		getConfig().addDefault("Stats", true);
 		
@@ -102,12 +76,11 @@ public class Languagy extends JavaPlugin {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-=======
+		
 		getConfig().addDefault("Languages.Enabled", Arrays.asList(Language.values()));
 		getConfig().addDefault("Effects.Quest Available.Colour", "AQUA");
 		
 		saveConfig();
->>>>>>> 64fb4f3178edb9eb6131b0c119ac1a65719b80f5
 	}
 	
 	private void registerCommands()
@@ -117,11 +90,7 @@ public class Languagy extends JavaPlugin {
 			bukkitCommandMap.setAccessible(true);
 			CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
-<<<<<<< HEAD
 			commandMap.register("Languagy", new LanguagyCommand(this));
-=======
-			commandMap.register("Languagy", new LanguagyCommand());
->>>>>>> 64fb4f3178edb9eb6131b0c119ac1a65719b80f5
 		} catch (NoSuchFieldException | 
 				SecurityException | 
 				IllegalArgumentException | 
@@ -130,7 +99,6 @@ public class Languagy extends JavaPlugin {
 		}
 	}
 	
-<<<<<<< HEAD
 	private void startMetrics()
 	{
 		if(getConfig().getBoolean("Stats"))
@@ -162,16 +130,5 @@ public class Languagy extends JavaPlugin {
 	{
 		Bukkit.getLogger().info("Running translate tester...");
 		this.translateTester = new Translator(this, new File(getDataFolder() + "/lang/en_gb.yml"));
-=======
-	private void registerListeners()
-	{
-		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new ListenerPlayerLocaleEvent(), this);
-	}
-	
-	private void startPacketListener()
-	{
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListenerClientInfo(this));
->>>>>>> 64fb4f3178edb9eb6131b0c119ac1a65719b80f5
 	}
 }
