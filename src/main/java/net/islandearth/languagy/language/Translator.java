@@ -1,6 +1,8 @@
 package net.islandearth.languagy.language;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -66,6 +68,37 @@ public class Translator {
 		} else {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
 			return ChatColor.translateAlternateColorCodes('&', config.getString(path));
+		}
+	}
+	
+	/**
+	 * 
+	 * @param target - Player
+	 * @param path - Configuraton path (Must be a list)
+	 * @return Translated list for player.
+	 * Colour codes are automatically translated.
+	 * If your plugin does not support their language,
+	 * your fallback file will be used.
+	 */
+	public List<String> getTranslationListFor(Player target, String path)
+	{
+		String lang = fallback.getAbsoluteFile().getParentFile().toString();
+		File file = new File(lang + "/" + target.getLocale() + ".yml");
+		if(file.exists())
+		{
+			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+			List<String> vals = new ArrayList<>();
+			for(String string : config.getStringList(path))
+			{
+				vals.add(ChatColor.translateAlternateColorCodes('&', string));
+			} return vals;
+		} else {
+			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
+			List<String> vals = new ArrayList<>();
+			for(String string : config.getStringList(path))
+			{
+				vals.add(ChatColor.translateAlternateColorCodes('&', string));
+			} return vals;
 		}
 	}
 }
