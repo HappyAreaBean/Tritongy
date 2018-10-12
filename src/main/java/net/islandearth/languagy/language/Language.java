@@ -15,7 +15,9 @@ public enum Language {
 	SPANISH("es_es"),
 	ITALIAN("it_it"),
 	DUTCH("nl_nl"),
-	POLISH("pl_pl");
+	POLISH("pl_pl"),
+	FINNISH("fi_fi"),
+	SWEDISH("sv_se");
 	
 	@Getter private String code;
 }

@@ -4,5 +4,4 @@ author: SamB440
 website: http://www.islandearth.net
 version: 1.0.0
 api-version: 1.13
-load: startup
 commands:
