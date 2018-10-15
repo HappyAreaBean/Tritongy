@@ -20,7 +20,7 @@ Your language files should be located in a **single** folder, preferably named "
 `File fallback = new File(getDataFolder() + "/lang/" + "en_gb.yml");`
 
 Next, loop through the values of the Language enum using Language#values(). In your for loop, create a new language file by getting the language code Language#getCode():
-`
+```
 File file = new File(getDataFolder() + "/lang/" + language.getCode() + ".yml");
 if (!file.exists()) {
 	try {
@@ -29,15 +29,15 @@ if (!file.exists()) {
 		e1.printStackTrace();
 	}
 }
-`
+```
 Load the configuration of that file using YamlConfiguration#loadConfiguration(file) and then add your defaults to the file, example:
-`
+```
 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 config.options().copyDefaults(true);
 config.addDefault("warn", "&cUnfair advantages on our server are not allowed. Continue using unfair advantages and you will be banned from our server.");
 config.addDefault("banned", "&c{player} &fhas been banned &a7 days for &b{cheat}.");
 config.addDefault("blacklisted", "&cBlacklisted modifications");
-`
+```
 Save the configuration using FileConfiguration#save(file).
 
 Finally, create a new translator:
