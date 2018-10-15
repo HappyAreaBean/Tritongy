@@ -78,7 +78,6 @@ public class Languagy extends JavaPlugin {
 		}
 		
 		getConfig().addDefault("Languages.Enabled", Arrays.asList(Language.values()));
-		getConfig().addDefault("Effects.Quest Available.Colour", "AQUA");
 		
 		saveConfig();
 	}
