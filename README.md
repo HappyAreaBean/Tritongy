@@ -5,7 +5,7 @@ Languagy is a Spigot API for providing player-individual languages for plugins.
 
 Usage
 -------
-Simply drag and drop the plugin into your Plugins folder. Languages can be disabled/enabled in config.yml. Run /lgy test in-game with the language English, then run with another language to make sure the plugin is working correctly.
+Simply drag and drop the plugin into your Plugins folder. Languages can be disabled/enabled in config.yml. Run /lgy test in-game with the language English, then run with american to make sure the plugin is working correctly.
 
 Supported Languages
 -------
