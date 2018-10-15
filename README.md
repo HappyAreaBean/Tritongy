@@ -65,7 +65,7 @@ Issues should be filed by hitting the [issues](https://gitlab.com/SamB440/Langua
 All opened tickets that are bug reports require a debug log that includes logs of the issue in question.
 
 **FAQ**:
-Do I need to restart/reload to update messages? No, the file is kept updated so you never need to restart/reload, you can change it whilst the server is running.
+* Do I need to restart/reload to update messages? No, the file is kept updated so you never need to restart/reload, you can change it whilst the server is running.
 
 Resources
 -------
