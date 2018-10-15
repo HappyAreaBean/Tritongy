@@ -74,6 +74,10 @@ Latest release download:
 
 Latest dev download: 
 
+Metrics
+-------
+Languagy uses [bStats](https://www.bstats.org) to collect statistics on the usage of the plugin. I would appreciate you not disabling this as it keeps me motivated and helps to improve the plugin.
+
 Compiling
 -------
 
