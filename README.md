@@ -11,9 +11,8 @@ Supported Languages
 -------
 You can view a list of the supported langagues [here](https://gitlab.com/SamB440/languagy/blob/master/src/main/java/net/islandearth/languagy/language/Language.java). Different English languages have been added for the sake of different grammar and spellings.
 
-Developer Resources
+API Usage
 -------
-API Usage:
 Firstly create a default language file that the API will fallback to when the player's language is not found/supported. Generally, en_gb should be preferred.
 
 Your language files should be located in a **single** folder, preferably named "lang". Fallback file should look like this (in your onEnable):
