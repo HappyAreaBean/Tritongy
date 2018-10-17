@@ -9,11 +9,9 @@ public class LanguageParser {
 	 * not exist within the enum, BRITISH_ENGLISH
 	 * is returned as the fallback default.
 	 */
-	public static Language getFromCode(String code)
-	{
-		for(Language language : Language.values())
-		{
-			if(language.getCode().equals(code)) return language;
+	public static Language getFromCode(String code) {
+		for (Language language : Language.values()) {
+			if (language.getCode().equals(code)) return language;
 		} return Language.BRITISH_ENGLISH;
 	}
 }

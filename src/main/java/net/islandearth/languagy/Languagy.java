@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -26,8 +25,7 @@ public class Languagy extends JavaPlugin {
 	@Getter private Translator translateTester;
 	
 	@Override
-	public void onEnable()
-	{
+	public void onEnable() {
 		log.info("Loading...");
 		createConfig();
 		registerCommands();
@@ -36,19 +34,16 @@ public class Languagy extends JavaPlugin {
 	}
 	
 	@Override
-	public void onDisable()
-	{
+	public void onDisable() {
 		log.info("Disabling...");
 	}
 	
-	private void createConfig()
-	{
+	private void createConfig() {
 		getConfig().options().copyDefaults(true);
 		
 		List<String> languages = new ArrayList<>();
-		for(Language language : Language.values())
-		{
-			languages.add(language.toString());
+		for (Language language : Language.values()) {
+			languages.add(language.getCode());
 		}
 		
 		getConfig().addDefault("Languages.Enabled", languages);
@@ -58,11 +53,11 @@ public class Languagy extends JavaPlugin {
 		
 		try {
 			File file = new File(getDataFolder() + "/lang/");
-			if(!file.exists()) file.mkdir();
+			if (!file.exists()) file.mkdir();
 			File lang = new File(getDataFolder() + "/lang/en_gb.yml");
-			if(!lang.exists()) lang.createNewFile();
+			if (!lang.exists()) lang.createNewFile();
 			File lang2 = new File(getDataFolder() + "/lang/en_us.yml");
-			if(!lang2.exists()) lang2.createNewFile();
+			if (!lang2.exists()) lang2.createNewFile();
 			
 			FileConfiguration config = YamlConfiguration.loadConfiguration(lang);
 			config.options().copyDefaults(true);
@@ -77,13 +72,10 @@ public class Languagy extends JavaPlugin {
 			e.printStackTrace();
 		}
 		
-		getConfig().addDefault("Languages.Enabled", Arrays.asList(Language.values()));
-		
 		saveConfig();
 	}
 	
-	private void registerCommands()
-	{
+	private void registerCommands() {
 		try {
 			Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			bukkitCommandMap.setAccessible(true);
@@ -98,10 +90,8 @@ public class Languagy extends JavaPlugin {
 		}
 	}
 	
-	private void startMetrics()
-	{
-		if(getConfig().getBoolean("Stats"))
-		{
+	private void startMetrics() {
+		if (getConfig().getBoolean("Stats")) {
 			Bukkit.getLogger().info("[Languagy] Starting metrics! Thanks :)");
 			@SuppressWarnings("unused")
 			Metrics metrics = new Metrics(this);
@@ -125,8 +115,7 @@ public class Languagy extends JavaPlugin {
 		}
 	}
 	
-	private void runTest()
-	{
+	private void runTest() {
 		Bukkit.getLogger().info("Running translate tester...");
 		this.translateTester = new Translator(this, new File(getDataFolder() + "/lang/en_gb.yml"));
 	}

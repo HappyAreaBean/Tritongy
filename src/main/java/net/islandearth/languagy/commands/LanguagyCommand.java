@@ -13,8 +13,7 @@ public class LanguagyCommand extends BukkitCommand {
 	
 	private Languagy plugin;
 	
-	public LanguagyCommand(Languagy plugin)
-	{
+	public LanguagyCommand(Languagy plugin) {
 		super("Languagy");
 		this.description = "Languagy Information";
 		this.usageMessage = "/Languagy";
@@ -24,21 +23,17 @@ public class LanguagyCommand extends BukkitCommand {
 
 	@Override
 	public boolean execute(CommandSender sender, String arg1, String[] args) {
-		switch(args.length)
-		{
+		switch (args.length) {
 			case 0:
 				sender.sendMessage(ChatColor.WHITE + "Languagy is a Spigot API for providing player-individual languages for plugins.");
 				sender.sendMessage(ChatColor.YELLOW + "© 2018 IslandEarth. All rights reserved. Made with" + " ❤ " + "by SamB440.");
 				break;
 			case 1:
-				switch(args[0].toLowerCase())
-				{
+				switch (args[0].toLowerCase()) {
 					case "test":
-						if(sender instanceof Player)
-						{
+						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							if(player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755"))
-							{
+							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
 								player.sendMessage(plugin.getTranslateTester().getTranslationFor(player, "Example"));
 							} else player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
 						} else sender.sendMessage(ChatColor.RED + "You need to be a player to do this!");
