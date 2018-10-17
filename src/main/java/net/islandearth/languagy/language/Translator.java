@@ -21,7 +21,7 @@ public class Translator {
 	
 	public Translator(@NonNull JavaPlugin plugin, @NonNull File fallback) {
 		if (!fallback.exists()) {
-			Bukkit.getLogger().warning("[Languagy] [" + plugin.getName() + "] Could not initiate new translator: Fallback does not exist!");
+			Bukkit.getLogger().warning("[" + plugin.getName() + "] [Languagy] Could not initiate new translator: Fallback does not exist!");
 			return;
 		}
 		
@@ -33,8 +33,8 @@ public class Translator {
 			File file = new File(lang.toString() + "/" + language.getCode() + ".yml");
 			if (!file.exists() || !file.getName().contains(language.getCode())) {
 				String reason = !file.exists() ? "Does not exist" : "File name is incorrect";
-				Bukkit.getLogger().warning("[Languagy] [" + plugin.getName() + "] Language file could not be loaded: " + file.getName() + ". Reason: " + reason);
-			} else Bukkit.getLogger().info("[Languagy] [" + plugin.getName() + "] Loaded language '" + language.getCode() + "'.");
+				Bukkit.getLogger().warning("[" + plugin.getName() + "] [Languagy] Language file could not be loaded: " + file.getName() + ". Reason: " + reason);
+			} else Bukkit.getLogger().info("[" + plugin.getName() + "] [Languagy] Loaded language '" + language.getCode() + "'.");
 		}
 	}
 	
