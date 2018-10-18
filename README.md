@@ -3,6 +3,13 @@ Languagy
 
 Languagy is a Spigot API for providing player-individual languages for plugins.
 
+    Developers
+
+    When your plugin requests a message for a player, their locale is detected and the API will get your plugin's appropiate language file with the string needed.
+
+    Server Owners
+    Simply place the .jar on your plugins folder. Any plugin that supports Languagy will automatically translate for you, however you need to translate the language files yourself. See the Usage section below for more information.
+
 Usage
 -------
 Simply drag and drop the plugin into your Plugins folder. Languages can be disabled/enabled in config.yml. Run /lgy test in-game with the language English, then run with American to make sure the plugin is working correctly.
@@ -67,16 +74,6 @@ All opened tickets that are bug reports require a debug log that includes logs o
 **FAQ**:
 * Do I need to restart/reload to update messages? No, the file is kept updated so you never need to restart/reload, you can change it whilst the server is running.
 
-Resources
--------
-Spigot: 
-
-Development Builds: 
-
-Latest release download: 
-
-Latest dev download: 
-
 Metrics
 -------
 Languagy uses [bStats](https://www.bstats.org) to collect statistics on the usage of the plugin. I would appreciate you not disabling this as it keeps me motivated and helps to improve the plugin.
@@ -84,6 +81,6 @@ Languagy uses [bStats](https://www.bstats.org) to collect statistics on the usag
 Compiling
 -------
 
-Languagy builds on Java JDK 1.8 and uses [Maven](http://maven.apache.org/download.cgi) to manage dependencies. Lombok is also used and you will need to install it: http://www.projectlombok.org
+Languagy builds on Java JDK 1.8 and uses Gradle to manage dependencies. Lombok is also used and you will need to install it: http://www.projectlombok.org
 
 
