@@ -18,7 +18,7 @@ import net.wesjd.anvilgui.AnvilGUI;
 public class ValueEditUI extends UI {
 
 	public ValueEditUI(HookedPlugin plugin, File file) {
-		super((int) roundUp(plugin.getFallbackFolder().listFiles().length - 1, 9), plugin.getPlugin().getName());
+		super((int) roundUp(getKeySize(file), 9), plugin.getPlugin().getName());
 		int current = 0;
 		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 		for (String key : config.getValues(true).keySet()) {
@@ -62,6 +62,11 @@ public class ValueEditUI extends UI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static int getKeySize(File file) {
+		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+		return config.getValues(true).size();
 	}
 	
 	private enum KeyType {
