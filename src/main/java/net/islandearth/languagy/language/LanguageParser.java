@@ -6,12 +6,12 @@ public class LanguageParser {
 	 * 
 	 * @param code - the language code, e.g "en_gb"
 	 * @return The language. If the language does
-	 * not exist within the enum, BRITISH_ENGLISH
+	 * not exist within the enum, ENGLISH
 	 * is returned as the fallback default.
 	 */
 	public static Language getFromCode(String code) {
 		for (Language language : Language.values()) {
 			if (language.getCode().equals(code)) return language;
-		} return Language.BRITISH_ENGLISH;
+		} return Language.ENGLISH;
 	}
 }

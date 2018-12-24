@@ -5,11 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum Language {
-	BRITISH_ENGLISH("en_gb"),
-	AMERICAN_ENGLISH("en_us"),
-	AUSTRALIAN_ENGLISH("en_au"),
-	CANADIAN_ENGLISH("en_ca"),
-	NEW_ZEALAND_ENGLISH("en_nz"),
+	ENGLISH("en_gb"),
 	GERMAN("de_de"),
 	FRENCH("fr_fr"),
 	SPANISH("es_es"),
@@ -17,7 +13,10 @@ public enum Language {
 	DUTCH("nl_nl"),
 	POLISH("pl_pl"),
 	FINNISH("fi_fi"),
-	SWEDISH("sv_se");
+	SWEDISH("sv_se"),
+	CZECH("cs_cz"),
+	SLOVAKIAN("sk_sk");
 	
-	@Getter private String code;
+	@Getter
+	private String code;
 }

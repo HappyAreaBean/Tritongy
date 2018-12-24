@@ -7,13 +7,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
-import net.islandearth.languagy.Languagy;
+import net.islandearth.languagy.LanguagyPlugin;
+import net.islandearth.languagy.ui.EditUI;
 
 public class LanguagyCommand extends BukkitCommand {
 	
-	private Languagy plugin;
+	private LanguagyPlugin plugin;
 	
-	public LanguagyCommand(Languagy plugin) {
+	public LanguagyCommand(LanguagyPlugin plugin) {
 		super("Languagy");
 		this.description = "Languagy Information";
 		this.usageMessage = "/Languagy";
@@ -35,8 +36,24 @@ public class LanguagyCommand extends BukkitCommand {
 							Player player = (Player) sender;
 							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
 								player.sendMessage(plugin.getTranslateTester().getTranslationFor(player, "Example"));
-							} else player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
-						} else sender.sendMessage(ChatColor.RED + "You need to be a player to do this!");
+							} else {
+								player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "You need to be a player to do this!");
+						}
+						break;
+					case "edit":
+						if (sender instanceof Player) {
+							Player player = (Player) sender;
+							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
+								new EditUI(plugin).openInventory(player);
+							} else {
+								player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "You need to be a player to do this!");
+						}
 						break;
 					default:
 						sender.sendMessage(ChatColor.RED + "Unknown command!");

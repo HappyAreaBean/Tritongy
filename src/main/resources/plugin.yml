@@ -1,7 +1,7 @@
 name: Languagy
-main: net.islandearth.languagy.Languagy
+main: net.islandearth.languagy.LanguagyPlugin
 author: SamB440
 website: http://www.islandearth.net
-version: @version@
+version: 1.0.1
 api-version: 1.13
 commands:
