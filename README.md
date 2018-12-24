@@ -3,17 +3,23 @@ Languagy
 
 Languagy is a Spigot API for providing player-individual languages for plugins.
 
-    Developers
 
+    Developers
     When your plugin requests a message for a player, their locale is detected and the API will get your plugin's appropiate language file with the string needed.
 
     Server Owners
     Simply place the .jar on your plugins folder. Any plugin that supports Languagy will automatically translate for you, however you need to translate the language files yourself. See the Usage section below for more information.
 
+    Once translated, change your Minecraft language to the language you want to translate to check that it works correctly.
+
+    In-game editor
+    You can easily edit all translations of any plugin using the command /lgy edit which will bring up a GUI.
+
 Usage
 -------
-Simply drag and drop the plugin into your Plugins folder. Languages can be disabled/enabled in config.yml. Run /lgy test in-game with the language English, then run with American to make sure the plugin is working correctly.
+Simply drag and drop the plugin into your Plugins folder. Languages can be disabled/enabled in config.yml. Run /lgy test in-game with the language English, then run with dutch to make sure the plugin is working correctly.
 
+You can also edit in-game using /lgy edit.
 Supported Languages
 -------
 You can view a list of the supported langagues [here](https://gitlab.com/SamB440/languagy/blob/master/src/main/java/net/islandearth/languagy/language/Language.java). Different English languages have been added for the sake of different grammar and spellings.
@@ -54,6 +60,10 @@ Create a getter for the translator in your main class.
 
 Now you can reference this translator from other classes using Plugin#getTranslator.
 
+
+    Further API
+    Translator#setDisplay(Material) - sets display material in /lgy edit
+
 Getting a string for a player
 ------------
 
@@ -64,6 +74,25 @@ plugin.getTranslator().getTranslationFor(arg0, arg1);
 arg0 is your player, and arg1 is the path to the string in your language file, just like configuration files!
 There is no need to translate chat colours, the API does that for you.
 
+Maven/Gradle
+------------
+NOTICE: My website is currently down. Will be back up asap!
+
+    Gradle:
+    [code]
+    repositories {
+     
+        mavenCentral()
+        mavenLocal()
+       maven {
+           name = 'islandearth'
+           url = 'http://www.islandearth.net/files/maven/'
+       }
+    }
+
+    dependencies {
+        compileOnly 'net.islandearth:languagy:1.0.0-SNAPSHOT'
+    }[/code]
 Bug Reporting/Support/Questions
 ------------
 
