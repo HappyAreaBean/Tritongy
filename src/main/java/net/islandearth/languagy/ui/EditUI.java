@@ -10,7 +10,7 @@ import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.api.HookedPlugin;
 
 public class EditUI extends UI {
-
+	
 	public EditUI(LanguagyPlugin plugin) {
 		super((int) roundUp(plugin.getHookedPlugins().size() - 1, 9), "Language Editor");
 		

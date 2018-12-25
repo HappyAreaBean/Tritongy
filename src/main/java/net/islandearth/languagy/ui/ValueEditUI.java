@@ -2,6 +2,8 @@ package net.islandearth.languagy.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,10 +18,13 @@ import net.islandearth.languagy.api.HookedPlugin;
 import net.wesjd.anvilgui.AnvilGUI;
 
 public class ValueEditUI extends UI {
+	
+	protected int MAX_SIZE = 44;
 
 	public ValueEditUI(HookedPlugin plugin, File file) {
-		super((int) roundUp(getKeySize(file), 9), plugin.getPlugin().getName());
+		super(54, plugin.getPlugin().getName());
 		int current = 0;
+		Map<String, ItemStack> overflow = new HashMap<>();
 		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 		for (String key : config.getValues(true).keySet()) {
 			if (config.isSet(key)
@@ -30,16 +35,63 @@ public class ValueEditUI extends UI {
 				ItemMeta lm = lang.getItemMeta();
 				lm.setDisplayName(ChatColor.WHITE + key);
 				lang.setItemMeta(lm);
-				setItem(current, lang, player -> {
-					openAnvil(player, config, key, file, type);
-				});
+				
+				if (current > MAX_SIZE) {
+					overflow.put(key, lang);
+				} else {
+					setItem(current, lang, player -> {
+						openAnvil(player, config, key, file, type);
+					});
+				}
 				current++;
 			}
 		}
+		
+		ItemStack next = new ItemStack(Material.ARROW);
+		ItemMeta nm = next.getItemMeta();
+		nm.setDisplayName(ChatColor.GREEN + "Next Page");
+		next.setItemMeta(nm);
+		setItem(53, next, player -> {
+			new ValueEditUI(plugin, overflow, file, player).openInventory(player);
+		});
 	}
 
-	private static long roundUp(long n, long m) {
-	    return n >= 0 ? ((n + m - 1) / m) * m : (n / m) * m;
+	protected ValueEditUI(HookedPlugin plugin, 
+			Map<String, ItemStack> overflow, 
+			File file,
+			Player player) {
+		super(54, "Language Editor");
+		int current = 0;
+		Map<String, ItemStack> extraOverflow = new HashMap<>();
+		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+		for (String key : overflow.keySet()) {
+			ItemStack item = overflow.get(key);
+			KeyType type = config.isString(key) ? KeyType.STRING : KeyType.BOOLEAN;
+			if (current > MAX_SIZE) {
+				extraOverflow.put(key, item);
+			} else {
+				setItem(current, item, player2 -> {
+					openAnvil(player2, config, key, file, type);
+				});
+			}
+			current++;
+		}
+		
+		/*ItemStack previous = new ItemStack(Material.ARROW);
+		ItemMeta pm = previous.getItemMeta();
+		pm.setDisplayName(ChatColor.GREEN + "Previous Page");
+		previous.setItemMeta(pm);
+		setItem(54, previous, player -> {
+			origin.openInventory(player);
+		});*/
+		
+		ItemStack next = new ItemStack(Material.ARROW);
+		ItemMeta nm = next.getItemMeta();
+		nm.setDisplayName(ChatColor.GREEN + "Next Page");
+		next.setItemMeta(nm);
+		setItem(53, next, player2 -> {
+			new ValueEditUI(plugin, extraOverflow, file, player2).openInventory(player2);
+		});
 	}
 	
 	private void openAnvil(Player player, FileConfiguration config, String path, File file, KeyType type) {
@@ -62,11 +114,6 @@ public class ValueEditUI extends UI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private static int getKeySize(File file) {
-		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-		return config.getValues(true).size();
 	}
 	
 	private enum KeyType {
