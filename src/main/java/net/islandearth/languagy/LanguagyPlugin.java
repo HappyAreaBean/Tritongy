@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,6 +23,8 @@ import net.islandearth.languagy.api.Languagy;
 import net.islandearth.languagy.language.Translator;
 import net.islandearth.languagy.listener.InventoryListener;
 import net.islandearth.languagy.metrics.Metrics;
+import net.islandearth.languagy.version.VersionChecker;
+import net.islandearth.languagy.version.VersionChecker.Version;
 
 public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	
@@ -35,9 +38,31 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	@Getter
 	private static LanguagyPlugin plugin;
 	
+	@Getter
+	private VersionChecker version;
+	
 	@Override
 	public void onEnable() {
 		log.info("Loading...");
+		this.version = new VersionChecker();
+		List<String> supported = new ArrayList<>();
+		for (Version version : Version.values()) {
+			supported.add(version.getId());
+		}
+		
+		if (!version.checkVersion()) {
+			log.info(" ");
+			log.info("&cYou are using an unsupported version!");
+			log.info("&cYour current version is: " + version.getCurrentVersion().getId());
+			log.info("&cThe latest version is: " + version.getLatestVersion().getId());
+			log.info("&aThis plugin supports: " + StringUtils.join(supported, ','));
+			log.info(" ");
+		}
+		
+		log.info(" ");
+		log.info("&aYou are running version " + version.getCurrentVersion().getId() + ".");
+		log.info(" ");
+		
 		LanguagyPlugin.plugin = this;
 		this.hookedPlugins = new ArrayList<>();
 		createConfig();

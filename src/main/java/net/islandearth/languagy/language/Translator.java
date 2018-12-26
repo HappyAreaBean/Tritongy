@@ -36,7 +36,7 @@ public class Translator {
 		this.plugin = plugin;
 		this.fallback = fallback;
 		File lang = fallback.getAbsoluteFile().getParentFile();
-		this.hook = new HookedPlugin(plugin, Material.GRASS_BLOCK, lang);
+		this.hook = new HookedPlugin(plugin, Material.DIRT, lang);
 		LanguagyPlugin.getPlugin().getHookedPlugins().add(hook);
 		System.out.println(lang.toString());
 		for (Language language : Language.values()) {

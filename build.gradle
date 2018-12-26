@@ -22,17 +22,12 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
-    maven {
-    	name = 'islandearth'
-    	url = 'http://www.islandearth.net/files/maven/'
-    }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.spigotmc:spigot:1.13.2-R0.1-SNAPSHOT'
-    compileOnly 'net.islandearth:itemcore:1.0.0-SNAPSHOT'
-    compileOnly 'net.islandearth:languagy:1.0.0-SNAPSHOT'
+    compileOnly 'net.islandearth:languagy:1.0.2-SNAPSHOT'
     compileOnly 'org.projectlombok:lombok:1.18.2'
     compileOnly 'com.djrapitops:plan:4.5.1-SNAPSHOT'
 	apt 'org.projectlombok:lombok:1.18.2'

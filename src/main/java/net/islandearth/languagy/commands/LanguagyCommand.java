@@ -47,7 +47,7 @@ public class LanguagyCommand extends BukkitCommand {
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
 							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
-								new EditUI(plugin).openInventory(player);
+								new EditUI(plugin, player).openInventory(player);
 							} else {
 								player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
 							}
