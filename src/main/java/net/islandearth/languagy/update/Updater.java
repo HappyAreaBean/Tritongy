@@ -17,6 +17,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
 import net.islandearth.languagy.LanguagyPlugin;
+import net.islandearth.languagyupdater.UpdaterDummy;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -24,8 +25,11 @@ public class Updater {
 	
 	protected LanguagyPlugin plugin;
 
-	private final String VERSION_URL = "https://api.spiget.org/v2/resources/61663/versions?size=15000";
-	private final String DESCRIPTION_URL = "https://api.spiget.org/v2/resources/61663/updates?size=15000";
+	private final String VERSION_URL = "https://samb440.gitlab.io/plugins/languagy/versions.json";
+	private final String DESCRIPTION_URL = "https://samb440.gitlab.io/plugins/languagy/updates.json";
+	
+	private final String SPIGET_VERSION_URL = "https://api.spiget.org/v2/resources/61663/versions?size=15000";
+	private final String SPIGET_DESCRIPTION_URL = "https://api.spiget.org/v2/resources/61663/updates?size=15000";
 	
 	public Updater(LanguagyPlugin plugin) {
 		this.plugin = plugin;
@@ -37,9 +41,34 @@ public class Updater {
 	public Object[] getLastUpdate() {
 		try {
 			JSONArray versionsArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(String.valueOf(VERSION_URL))));
-			String lastVersion = ((JSONObject) versionsArray.get(versionsArray.size() - 1)).get("name").toString();
+			String lastVersion = ((JSONObject) versionsArray.get(versionsArray.size() - 1)).get("version").toString();
             if (Integer.parseInt(lastVersion.replaceAll("\\.","")) > Integer.parseInt(plugin.getDescription().getVersion().replaceAll("\\.",""))) {
                 JSONArray updatesArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(String.valueOf(DESCRIPTION_URL))));
+                String updateName = ((JSONObject) updatesArray.get(updatesArray.size() - 1)).get("description").toString();
+                
+                Object[] update = {lastVersion, updateName};
+                return update;
+            }
+		} catch (ParseException | IOException e) {
+			return new String[0];
+		}
+		return new String[0];
+	}
+	
+
+	public boolean isLastUpdateDev() {
+		return getLastUpdate().length == 2 && getLastUpdateSpiget().length != 2;
+	}
+	
+	/**
+	 * @author iAmGio
+	 */
+	public Object[] getLastUpdateSpiget() {
+		try {
+			JSONArray versionsArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(String.valueOf(SPIGET_VERSION_URL))));
+			String lastVersion = ((JSONObject) versionsArray.get(versionsArray.size() - 1)).get("name").toString();
+            if (Integer.parseInt(lastVersion.replaceAll("\\.","")) > Integer.parseInt(plugin.getDescription().getVersion().replaceAll("\\.",""))) {
+                JSONArray updatesArray = (JSONArray) JSONValue.parseWithException(IOUtils.toString(new URL(String.valueOf(SPIGET_DESCRIPTION_URL))));
                 String updateName = ((JSONObject) updatesArray.get(updatesArray.size() - 1)).get("title").toString();
    
                 Object[] update = {lastVersion, updateName};
@@ -50,7 +79,7 @@ public class Updater {
 		}
 		return new String[0];
 	}
-	
+
 	public void update(Player admin) {
 		try {
 			sendActionBar(admin, "Downloading updater plugin...");
@@ -59,6 +88,9 @@ public class Updater {
 			try {
 				sendActionBar(admin, "Reloading plugin and removing Updater.");
 				Bukkit.getPluginManager().loadPlugin(new File("plugins/UpdaterDummy.jar"));
+				UpdaterDummy.setUrl(new URL("https://gitlab.com/SamB440/samb440.gitlab.io/raw/master/plugins/Languagy.jar"));
+				UpdaterDummy.setTo(new File("plugins/Languagy.jar"));
+				UpdaterDummy.setPluginName("Languagy");
 				Bukkit.getPluginManager().enablePlugin(Bukkit.getPluginManager().getPlugin("LanguagyUpdater"));
 			} catch (UnknownDependencyException | InvalidPluginException | InvalidDescriptionException e) {
 				sendActionBar(admin, "An error occurred whilst downloading the updater. Please check the console.");
