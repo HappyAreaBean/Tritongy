@@ -9,22 +9,28 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
-import net.islandearth.languagy.commands.LanguagyCommand;
-import net.islandearth.languagy.language.Language;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.api.Languagy;
+import net.islandearth.languagy.commands.LanguagyCommand;
+import net.islandearth.languagy.language.Language;
 import net.islandearth.languagy.language.Translator;
 import net.islandearth.languagy.listener.InventoryListener;
+import net.islandearth.languagy.listener.JoinListener;
 import net.islandearth.languagy.metrics.Metrics;
 import net.islandearth.languagy.version.VersionChecker;
 import net.islandearth.languagy.version.VersionChecker.Version;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	
@@ -44,6 +50,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	@Override
 	public void onEnable() {
 		log.info("Loading...");
+		removeUpdater();
 		this.version = new VersionChecker();
 		List<String> supported = new ArrayList<>();
 		for (Version version : Version.values()) {
@@ -52,19 +59,19 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 		
 		if (!version.checkVersion()) {
 			log.info(" ");
-			log.info("&cYou are using an unsupported version!");
-			log.info("&cYour current version is: " + version.getCurrentVersion().getId());
-			log.info("&cThe latest version is: " + version.getLatestVersion().getId());
-			log.info("&aThis plugin supports: " + StringUtils.join(supported, ','));
+			log.info(ChatColor.RED + "You are using an unsupported version!");
+			log.info(ChatColor.RED + "Your current version is: " + version.getCurrentVersion().getId());
+			log.info(ChatColor.RED + "The latest version is: " + version.getLatestVersion().getId());
+			log.info(ChatColor.GREEN + "This plugin supports: " + StringUtils.join(supported, ','));
 			log.info(" ");
 		}
 		
 		log.info(" ");
-		log.info("&aYou are running version " + version.getCurrentVersion().getId() + ".");
+		log.info(ChatColor.GREEN + "You are running version " + version.getCurrentVersion().getId() + ".");
 		log.info(" ");
 		
 		LanguagyPlugin.plugin = this;
-		this.hookedPlugins = new ArrayList<>();
+		if (hookedPlugins == null) this.hookedPlugins = new ArrayList<>();
 		createConfig();
 		registerCommands();
 		registerListeners();
@@ -75,6 +82,9 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	@Override
 	public void onDisable() {
 		log.info("Disabling...");
+		LanguagyPlugin.plugin = null;
+		this.version = null;
+		this.translateTester = null;
 	}
 	
 	private void createConfig() {
@@ -120,7 +130,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 			Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			bukkitCommandMap.setAccessible(true);
 			CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-
 			commandMap.register("Languagy", new LanguagyCommand(this));
 		} catch (NoSuchFieldException | 
 				SecurityException | 
@@ -133,6 +142,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	private void registerListeners() {
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new InventoryListener(), this);
+		pm.registerEvents(new JoinListener(this), this);
 	}
 	
 	private void startMetrics() {
@@ -168,5 +178,38 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	@Override
 	public List<HookedPlugin> getHookedPlugins() {
 		return hookedPlugins;
+	}
+	
+	private void removeUpdater() {
+		Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
+			File updater = new File("plugins/UpdaterDummy.jar");
+			if (updater.exists()) {
+				log.warning("Removing updater plugin!");
+				sendActionBar(ChatColor.YELLOW + "Removing updater plugin!");
+				sendMessage(ChatColor.GREEN + "It seems you updated Languagy recently, but a full restart is recommended to prevent any problems.");
+				try {
+					updater.delete();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}, 40L);
+	}
+	
+	private void sendActionBar(String message) {
+		for (Player admin : Bukkit.getOnlinePlayers()) {
+			if (admin.isOp()) {
+				admin.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+			}
+		}
+	}
+	
+	private void sendMessage(String message) {
+		for (Player admin : Bukkit.getOnlinePlayers()) {
+			if (admin.isOp()) {
+				admin.playSound(admin.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+				admin.sendMessage(message);
+			}
+		}
 	}
 }

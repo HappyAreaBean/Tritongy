@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.ui.EditUI;
+import net.islandearth.languagy.update.Updater;
 
 public class LanguagyCommand extends BukkitCommand {
 	
@@ -48,6 +49,18 @@ public class LanguagyCommand extends BukkitCommand {
 							Player player = (Player) sender;
 							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
 								new EditUI(plugin, player).openInventory(player);
+							} else {
+								player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "You need to be a player to do this!");
+						}
+						break;
+					case "update":
+						if (sender instanceof Player) {
+							Player player = (Player) sender;
+							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
+								new Updater(plugin).update(player);
 							} else {
 								player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
 							}

@@ -36,8 +36,8 @@ public class Translator {
 		this.plugin = plugin;
 		this.fallback = fallback;
 		File lang = fallback.getAbsoluteFile().getParentFile();
-		this.hook = new HookedPlugin(plugin, Material.DIRT, lang);
-		LanguagyPlugin.getPlugin().getHookedPlugins().add(hook);
+		this.hook = new HookedPlugin(plugin, Material.DIRT, lang, fallback);
+		if (LanguagyPlugin.getPlugin() != null) LanguagyPlugin.getPlugin().getHookedPlugins().add(hook);
 		System.out.println(lang.toString());
 		for (Language language : Language.values()) {
 			File file = new File(lang.toString() + "/" + language.getCode() + ".yml");

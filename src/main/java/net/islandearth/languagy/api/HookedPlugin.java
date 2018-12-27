@@ -20,4 +20,7 @@ public class HookedPlugin {
 	
 	@Getter
 	private File fallbackFolder;
+	
+	@Getter
+	private File fallback;
 }
