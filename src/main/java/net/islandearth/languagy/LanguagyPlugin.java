@@ -54,7 +54,9 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 		this.version = new VersionChecker();
 		List<String> supported = new ArrayList<>();
 		for (Version version : Version.values()) {
-			supported.add(version.getId());
+			if (version != Version.UNSUPPORTED) {
+				supported.add(version.getId());
+			}
 		}
 		
 		if (!version.checkVersion()) {
@@ -64,11 +66,11 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 			log.info(ChatColor.RED + "The latest version is: " + version.getLatestVersion().getId());
 			log.info(ChatColor.GREEN + "This plugin supports: " + StringUtils.join(supported, ','));
 			log.info(" ");
+		} else {
+			log.info(" ");
+			log.info(ChatColor.GREEN + "You are running version " + version.getCurrentVersion().getId() + ".");
+			log.info(" ");
 		}
-		
-		log.info(" ");
-		log.info(ChatColor.GREEN + "You are running version " + version.getCurrentVersion().getId() + ".");
-		log.info(" ");
 		
 		LanguagyPlugin.plugin = this;
 		if (hookedPlugins == null) this.hookedPlugins = new ArrayList<>();

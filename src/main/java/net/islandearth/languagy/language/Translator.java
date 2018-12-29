@@ -33,6 +33,14 @@ public class Translator {
 			return;
 		}
 		
+		if (LanguagyPlugin.getPlugin() != null) {
+			for (HookedPlugin hook : LanguagyPlugin.getPlugin().getHookedPlugins()) {
+				if (hook.getPlugin().getName().equals(plugin.getName())) {
+					LanguagyPlugin.getPlugin().getHookedPlugins().remove(hook);
+				}
+			}
+		}
+		
 		this.plugin = plugin;
 		this.fallback = fallback;
 		File lang = fallback.getAbsoluteFile().getParentFile();
