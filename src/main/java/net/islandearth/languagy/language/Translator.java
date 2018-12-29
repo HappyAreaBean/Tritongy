@@ -34,10 +34,16 @@ public class Translator {
 		}
 		
 		if (LanguagyPlugin.getPlugin() != null) {
+			HookedPlugin remove = null;
 			for (HookedPlugin hook : LanguagyPlugin.getPlugin().getHookedPlugins()) {
 				if (hook.getPlugin().getName().equals(plugin.getName())) {
-					LanguagyPlugin.getPlugin().getHookedPlugins().remove(hook);
+					remove = hook;
+					break;
 				}
+			}
+			
+			if (remove != null) {
+				LanguagyPlugin.getPlugin().getHookedPlugins().remove(remove);
 			}
 		}
 		
