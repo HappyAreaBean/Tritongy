@@ -121,4 +121,10 @@ public class Translator {
 			} return vals;
 		}
 	}
+	
+	public FileConfiguration getFileConfiguration(Player target) {
+		String lang = fallback.getAbsoluteFile().getParentFile().toString();
+		File file = new File(lang + "/" + target.getLocale() + ".yml");
+		return YamlConfiguration.loadConfiguration(file);
+	}
 }
