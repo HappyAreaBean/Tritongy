@@ -21,6 +21,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import lombok.Getter;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.api.Languagy;
+import net.islandearth.languagy.api.LanguagyAPI;
+import net.islandearth.languagy.api.event.PluginUpdatedEvent;
 import net.islandearth.languagy.commands.LanguagyCommand;
 import net.islandearth.languagy.language.Language;
 import net.islandearth.languagy.language.Translator;
@@ -74,6 +76,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 		
 		LanguagyPlugin.plugin = this;
 		if (hookedPlugins == null) this.hookedPlugins = new ArrayList<>();
+		LanguagyAPI.set(this);
 		createConfig();
 		registerCommands();
 		registerListeners();
@@ -168,7 +171,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 			metrics.addCustomChart(new Metrics.AdvancedBarChart("enabled_languages", () -> languages));*/
 		} else {
 			Bukkit.getLogger().warning("[Languagy] Metrics is disabled! :(");
-			Bukkit.getLogger().warning("[Languagy] Please enable metrics to keep me motivated! ;(");
+			Bukkit.getLogger().warning("[Languagy] Please enable metrics to keep me motivated!");
 		}
 	}
 	
@@ -190,7 +193,9 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 				sendActionBar(ChatColor.YELLOW + "Removing updater plugin!");
 				sendMessage(ChatColor.GREEN + "It seems you updated Languagy recently, but a full restart is recommended to prevent any problems.");
 				try {
+					Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("Updater"));
 					updater.delete();
+					Bukkit.getPluginManager().callEvent(new PluginUpdatedEvent());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

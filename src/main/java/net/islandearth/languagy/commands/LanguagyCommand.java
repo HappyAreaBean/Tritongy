@@ -48,10 +48,14 @@ public class LanguagyCommand extends BukkitCommand {
 					case "edit":
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
-								new EditUI(plugin, player).openInventory(player);
+							if (plugin.getVersion().currentVersion == plugin.getVersion().latestVersion) {
+								if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
+									new EditUI(plugin, player).openInventory(player);
+								} else {
+									player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
+								}
 							} else {
-								player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
+								player.sendMessage(ChatColor.RED + "This feature only supports the latest version!");
 							}
 						} else {
 							sender.sendMessage(ChatColor.RED + "You need to be a player to do this!");

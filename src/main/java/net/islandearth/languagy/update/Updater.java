@@ -18,6 +18,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
 import net.islandearth.languagy.LanguagyPlugin;
+import net.islandearth.languagy.api.event.PluginUpdatingEvent;
 import net.islandearth.updater.UpdaterDummy;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -82,29 +83,32 @@ public class Updater {
 	}
 
 	public void update(Player admin) {
-		if (Bukkit.getPluginManager().getPlugin("Updater") == null) {
+		if (Bukkit.getPluginManager().isPluginEnabled("Updater")) {
+			admin.sendMessage(ChatColor.RED + "The updater is already working. Please try again later when the updater has finished.");
+			return;
+		}
+		
+		try {
+			Bukkit.getPluginManager().callEvent(new PluginUpdatingEvent());
+			sendActionBar(admin, "Downloading updater plugin...");
+			FileUtils.copyURLToFile(new URL("https://samb440.gitlab.io/plugins/UpdaterDummy.jar"), new File("plugins/UpdaterDummy.jar"));
+			sendActionBar(admin, "Updater plugin downloaded.");
 			try {
-				sendActionBar(admin, "Downloading updater plugin...");
-				FileUtils.copyURLToFile(new URL("https://samb440.gitlab.io/plugins/UpdaterDummy.jar"), new File("plugins/UpdaterDummy.jar"));
-				sendActionBar(admin, "Updater plugin downloaded.");
-				try {
-					sendActionBar(admin, "Reloading plugin and removing Updater.");
-					Bukkit.getPluginManager().loadPlugin(new File("plugins/UpdaterDummy.jar"));
-					UpdaterDummy.setUrl(new URL("https://samb440.gitlab.io/plugins/Languagy.jar"));
-					UpdaterDummy.setTo(new File("plugins/Languagy.jar"));
-					UpdaterDummy.setPluginName("Languagy");
-					Bukkit.getPluginManager().enablePlugin(Bukkit.getPluginManager().getPlugin("Updater"));
-				} catch (UnknownDependencyException | InvalidPluginException | InvalidDescriptionException e) {
-					sendActionBar(admin, "An error occurred whilst downloading the updater. Please check the console.");
-					e.printStackTrace();
-				}
-			} catch (IOException e) {
-				sendActionBar(admin, "An error occurred. Please check the console.");
+				sendActionBar(admin, "Reloading plugin and removing Updater.");
+				Bukkit.getPluginManager().loadPlugin(new File("plugins/UpdaterDummy.jar"));
+				UpdaterDummy.setUrl(new URL("https://samb440.gitlab.io/plugins/Languagy.jar"));
+				UpdaterDummy.setTo(new File("plugins/Languagy.jar"));
+				UpdaterDummy.setPluginName("Languagy");
+				Bukkit.getPluginManager().enablePlugin(Bukkit.getPluginManager().getPlugin("Updater"));
+			} catch (UnknownDependencyException | InvalidPluginException | InvalidDescriptionException e) {
+				sendActionBar(admin, "An error occurred whilst downloading the updater. Please check the console.");
 				e.printStackTrace();
 			}
-		} else {
-			admin.sendMessage(ChatColor.RED + "The updater is already working. Please try again later when the updater has finished.");
+		} catch (IOException e) {
+			sendActionBar(admin, "An error occurred. Please check the console.");
+			e.printStackTrace();
 		}
+		
 	}
 	
     private void sendActionBar(Player player, String message) {

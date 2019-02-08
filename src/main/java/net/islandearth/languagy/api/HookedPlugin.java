@@ -15,7 +15,8 @@ public class HookedPlugin {
 	@Getter
 	private JavaPlugin plugin;
 	
-	@Getter @Setter
+	@Getter 
+	@Setter
 	private Material display;
 	
 	@Getter

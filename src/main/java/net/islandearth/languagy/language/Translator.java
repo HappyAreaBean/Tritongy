@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.api.HookedPlugin;
+import net.islandearth.languagy.api.event.PlayerTranslateEvent;
+import net.islandearth.languagy.api.event.PluginHookEvent;
 
 public class Translator {
 	
@@ -52,6 +54,7 @@ public class Translator {
 		File lang = fallback.getAbsoluteFile().getParentFile();
 		this.hook = new HookedPlugin(plugin, Material.DIRT, lang, fallback);
 		if (LanguagyPlugin.getPlugin() != null) LanguagyPlugin.getPlugin().getHookedPlugins().add(hook);
+		Bukkit.getPluginManager().callEvent(new PluginHookEvent(hook));
 		System.out.println(lang.toString());
 		for (Language language : Language.values()) {
 			File file = new File(lang.toString() + "/" + language.getCode() + ".yml");
@@ -64,6 +67,11 @@ public class Translator {
 		}
 	}
 	
+	/**
+	 * Sets the display material in the editor UI.
+	 * @param material - material to display
+	 * @return translator instance
+	 */
 	public Translator setDisplay(@NonNull Material material) {
 		hook.setDisplay(material);
 		return this;
@@ -88,10 +96,14 @@ public class Translator {
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
 		if (file.exists()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-			return ChatColor.translateAlternateColorCodes('&', config.getString(path));
+			String translation = ChatColor.translateAlternateColorCodes('&', config.getString(path));
+			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, translation, hook));
+			return translation;
 		} else {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
-			return ChatColor.translateAlternateColorCodes('&', config.getString(path));
+			String translation = ChatColor.translateAlternateColorCodes('&', config.getString(path));
+			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, translation, hook));
+			return translation;
 		}
 	}
 	
@@ -112,16 +124,27 @@ public class Translator {
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
 				vals.add(ChatColor.translateAlternateColorCodes('&', string));
-			} return vals;
+			}
+			
+			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, vals, hook));
+			return vals;
 		} else {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
 				vals.add(ChatColor.translateAlternateColorCodes('&', string));
-			} return vals;
+			} 
+			
+			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, vals, hook));
+			return vals;
 		}
 	}
 	
+	/**
+	 * 
+	 * @param target - Player
+	 * @return configuration for player's language
+	 */
 	public FileConfiguration getFileConfiguration(Player target) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
