@@ -193,7 +193,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 				sendActionBar(ChatColor.YELLOW + "Removing updater plugin!");
 				sendMessage(ChatColor.GREEN + "It seems you updated Languagy recently, but a full restart is recommended to prevent any problems.");
 				try {
-					Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("Updater"));
 					updater.delete();
 					Bukkit.getPluginManager().callEvent(new PluginUpdatedEvent());
 				} catch (Exception e) {
