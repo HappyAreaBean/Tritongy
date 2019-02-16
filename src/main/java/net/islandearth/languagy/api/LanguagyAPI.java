@@ -5,14 +5,14 @@ public class LanguagyAPI {
 	private static Languagy languagy;
 	
 	public static void set(Languagy languagy) {
-		if (languagy != null) {
+		if (LanguagyAPI.languagy != null) {
 			throw new IllegalArgumentException("Plugin has already been set!");
 		}
 		
 		LanguagyAPI.languagy = languagy;
 	}
 	
-	public static Languagy getLanguagy() {
+	public static Languagy get() {
 		return languagy;
 	}
 }
