@@ -2,7 +2,6 @@ package net.islandearth.languagy.commands;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.ui.EditUI;
-import net.islandearth.languagy.update.Updater;
 
 public class LanguagyCommand extends BukkitCommand {
 	
@@ -64,11 +62,7 @@ public class LanguagyCommand extends BukkitCommand {
 					case "update":
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							if (player.isOp() || player.getUniqueId().toString().equals("4b319cd4-e827-4dcf-a303-9a3fce310755")) {
-								Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> new Updater(plugin).update(player));
-							} else {
-								player.sendMessage(ChatColor.RED + "You don't have permission to do this!");
-							}
+							player.sendMessage(ChatColor.RED + "Sorry, but this feature is no longer supported!");
 						} else {
 							sender.sendMessage(ChatColor.RED + "You need to be a player to do this!");
 						}

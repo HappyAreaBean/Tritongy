@@ -10,11 +10,13 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,23 +24,23 @@ import lombok.Getter;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.api.Languagy;
 import net.islandearth.languagy.api.LanguagyAPI;
-import net.islandearth.languagy.api.event.PluginUpdatedEvent;
 import net.islandearth.languagy.commands.LanguagyCommand;
 import net.islandearth.languagy.language.Language;
+import net.islandearth.languagy.language.LanguagyImplementation;
+import net.islandearth.languagy.language.LanguagyPluginHook;
 import net.islandearth.languagy.language.Translator;
 import net.islandearth.languagy.listener.InventoryListener;
 import net.islandearth.languagy.listener.JoinListener;
 import net.islandearth.languagy.metrics.Metrics;
 import net.islandearth.languagy.version.VersionChecker;
 import net.islandearth.languagy.version.VersionChecker.Version;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 
-public class LanguagyPlugin extends JavaPlugin implements Languagy {
+public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, LanguagyPluginHook {
 	
 	private Logger log = Bukkit.getLogger();
 	
-	@Getter 
+	@LanguagyImplementation(fallbackFile = "plugins/Languagy/lang/en_gb.yml")
+	@Getter
 	private Translator translateTester;
 	
 	private List<HookedPlugin> hookedPlugins;
@@ -52,7 +54,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	@Override
 	public void onEnable() {
 		log.info("Loading...");
-		removeUpdater();
 		this.version = new VersionChecker();
 		List<String> supported = new ArrayList<>();
 		for (Version version : Version.values()) {
@@ -81,7 +82,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 		registerCommands();
 		registerListeners();
 		startMetrics();
-		runTest();
 	}
 	
 	@Override
@@ -146,13 +146,14 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 	
 	private void registerListeners() {
 		PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(this, this);
 		pm.registerEvents(new InventoryListener(), this);
 		pm.registerEvents(new JoinListener(this), this);
 	}
 	
 	private void startMetrics() {
 		if (getConfig().getBoolean("Stats")) {
-			Bukkit.getLogger().info("[Languagy] Starting metrics! Thanks :)");
+			this.getLogger().info("[Languagy] Starting metrics! Thanks :)");
 			@SuppressWarnings("unused")
 			Metrics metrics = new Metrics(this);
 			/*Map<String, int[]> languages = new HashMap<>();
@@ -170,52 +171,44 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy {
 
 			metrics.addCustomChart(new Metrics.AdvancedBarChart("enabled_languages", () -> languages));*/
 		} else {
-			Bukkit.getLogger().warning("[Languagy] Metrics is disabled! :(");
-			Bukkit.getLogger().warning("[Languagy] Please enable metrics to keep me motivated!");
+			this.getLogger().warning("[Languagy] Metrics is disabled! :(");
+			this.getLogger().warning("[Languagy] Please enable metrics to keep me motivated!");
 		}
-	}
-	
-	private void runTest() {
-		Bukkit.getLogger().info("Running translate tester...");
-		this.translateTester = new Translator(this, new File(getDataFolder() + "/lang/en_gb.yml"));
 	}
 
 	@Override
 	public List<HookedPlugin> getHookedPlugins() {
 		return hookedPlugins;
 	}
-	
-	private void removeUpdater() {
-		Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
-			File updater = new File("plugins/UpdaterDummy.jar");
-			if (updater.exists()) {
-				log.warning("Removing updater plugin!");
-				sendActionBar(ChatColor.YELLOW + "Removing updater plugin!");
-				sendMessage(ChatColor.GREEN + "It seems you updated Languagy recently, but a full restart is recommended to prevent any problems.");
-				try {
-					updater.delete();
-					Bukkit.getPluginManager().callEvent(new PluginUpdatedEvent());
-				} catch (Exception e) {
-					e.printStackTrace();
+
+	@EventHandler
+	public void enable(PluginEnableEvent ple) {
+		Plugin plugin = ple.getPlugin();
+		if (plugin.getDescription().getDepend().contains("Languagy") || plugin.getDescription().getSoftDepend().contains("Languagy") || plugin.getName().equals("Languagy")) {
+			for (Field field : plugin.getClass().getDeclaredFields()) {
+				plugin.getLogger().info("[Languagy] Found field " + field.getName() + " in " + plugin.getClass().toString() + ".");
+				if (field.getAnnotation(LanguagyImplementation.class) != null) {
+					if (LanguagyPluginHook.class.isInstance(plugin)) {
+						LanguagyImplementation implementation = field.getAnnotation(LanguagyImplementation.class);
+						plugin.getLogger().info("[Languagy] Found annotation " + implementation.toString() + " on field " + field.getName() + ".");
+						field.setAccessible(true);
+						try {
+							field.set(plugin, new Translator(plugin, new File(implementation.fallbackFile())));
+							LanguagyPluginHook lph = (LanguagyPluginHook) plugin;
+							lph.onLanguagyHook();
+							break;
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					} else {
+						plugin.getLogger().severe("[Languagy] Unable to start because main class does not implement LanguagyPluginHook.");
+						Bukkit.getPluginManager().disablePlugin(plugin);
+					}
 				}
 			}
-		}, 40L);
-	}
-	
-	private void sendActionBar(String message) {
-		for (Player admin : Bukkit.getOnlinePlayers()) {
-			if (admin.isOp()) {
-				admin.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-			}
 		}
 	}
-	
-	private void sendMessage(String message) {
-		for (Player admin : Bukkit.getOnlinePlayers()) {
-			if (admin.isOp()) {
-				admin.playSound(admin.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
-				admin.sendMessage(message);
-			}
-		}
-	}
+
+	@Override
+	public void onLanguagyHook() {}
 }

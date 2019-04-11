@@ -28,7 +28,6 @@ public class JoinListener implements Listener {
 				    player.sendMessage(ChatColor.GOLD + "New version: " + ChatColor.YELLOW + updates[0]);
 				    player.sendMessage(ChatColor.GOLD + "Your version: " + ChatColor.YELLOW + plugin.getDescription().getVersion());
 				    player.sendMessage(ChatColor.GOLD + "What's new: " + ChatColor.YELLOW + updates[1]);
-				    if (updater.isLastUpdateDev()) player.sendMessage(ChatColor.RED + "DEVELOPMENT UPDATE ONLY. PROCEED WITH CAUTION.");
 				    player.sendMessage(ChatColor.GREEN + "Type /lgy update to update the plugin. Your server will not restart.");
 				}
 			});

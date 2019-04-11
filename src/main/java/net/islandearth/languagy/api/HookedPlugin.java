@@ -3,7 +3,7 @@ package net.islandearth.languagy.api;
 import java.io.File;
 
 import org.bukkit.Material;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 public class HookedPlugin {
 
 	@Getter
-	private JavaPlugin plugin;
+	private Plugin plugin;
 	
 	@Getter 
 	@Setter
