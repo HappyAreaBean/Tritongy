@@ -8,6 +8,7 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 import net.islandearth.languagy.LanguagyPlugin;
+import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.ui.EditUI;
 
 public class LanguagyCommand extends BukkitCommand {
@@ -27,7 +28,7 @@ public class LanguagyCommand extends BukkitCommand {
 		switch (args.length) {
 			case 0:
 				sender.sendMessage(ChatColor.WHITE + "Languagy is a Spigot API for providing player-individual languages for plugins.");
-				sender.sendMessage(ChatColor.YELLOW + "© 2018 IslandEarth. All rights reserved. Made with" + " ❤ " + "by SamB440.");
+				sender.sendMessage(ChatColor.YELLOW + "© 2019 IslandEarth. All rights reserved.");
 				break;
 			case 1:
 				switch (args[0].toLowerCase()) {
@@ -71,7 +72,24 @@ public class LanguagyCommand extends BukkitCommand {
 						sender.sendMessage(ChatColor.RED + "Unknown command!");
 						break;
 				}
-				
+				break;
+			case 2:
+				switch (args[0].toLowerCase()) {
+					case "view": 
+						String pluginName = args[1];
+						for (HookedPlugin hp : plugin.getHookedPlugins()) {
+							if (hp.getPlugin().getName().equalsIgnoreCase(pluginName)) {
+								sender.sendMessage(ChatColor.GREEN + "Plugin " + pluginName + " is hooked and working.");
+								sender.sendMessage("Version: " + hp.getPlugin().getDescription().getVersion());
+								sender.sendMessage("Display: " + hp.getDisplay().toString());
+								sender.sendMessage("Fallback: " + hp.getFallback().getPath());
+								return true;
+							}
+						}
+						
+						sender.sendMessage(ChatColor.RED + "No plugin by that name can be found.");
+						break;
+				}
 				break;
 			default:
 				sender.sendMessage(ChatColor.WHITE + "Languagy is a Spigot API for providing player-individual languages for plugins.");

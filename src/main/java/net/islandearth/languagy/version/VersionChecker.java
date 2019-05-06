@@ -35,6 +35,7 @@ public class VersionChecker {
 	
 	@AllArgsConstructor
 	public enum Version {
+		v1_14_R1("1.14"),
 		v1_13_R2("1.13.2"),
 		v1_13_R1("1.13.1"),
 		v1_12_R2("1.12.2"),

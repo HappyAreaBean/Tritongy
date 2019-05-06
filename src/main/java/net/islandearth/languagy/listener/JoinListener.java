@@ -22,13 +22,11 @@ public class JoinListener implements Listener {
 		if (player.isOp()) {
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				Updater updater = new Updater(plugin);
-				Object[] updates = updater.getLastUpdate();
-				if (updates.length == 2) {
-				    player.sendMessage(ChatColor.GOLD + "[" + ChatColor.YELLOW + "Languagy" + ChatColor.GOLD + "] New update avaible:");
-				    player.sendMessage(ChatColor.GOLD + "New version: " + ChatColor.YELLOW + updates[0]);
+				String updates = updater.getLatestVersion();
+				if (!updates.equals(plugin.getDescription().getVersion())) {
+				    player.sendMessage(ChatColor.GOLD + "[" + ChatColor.YELLOW + "Languagy" + ChatColor.GOLD + "] New update available:");
+				    player.sendMessage(ChatColor.GOLD + "New version: " + ChatColor.YELLOW + updates);
 				    player.sendMessage(ChatColor.GOLD + "Your version: " + ChatColor.YELLOW + plugin.getDescription().getVersion());
-				    player.sendMessage(ChatColor.GOLD + "What's new: " + ChatColor.YELLOW + updates[1]);
-				    player.sendMessage(ChatColor.GREEN + "Type /lgy update to update the plugin. Your server will not restart.");
 				}
 			});
 		}
