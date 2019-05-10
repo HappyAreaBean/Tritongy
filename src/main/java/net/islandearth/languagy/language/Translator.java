@@ -35,11 +35,10 @@ public class Translator {
 	public Translator(@NonNull JavaPlugin plugin, @NonNull File fallback) {
 		plugin.getLogger().warning("[Languagy] Plugin is using deprecated translator constructor! Please nag the author(s), " + plugin.getDescription().getAuthors() + ", about this!");
 		plugin.getLogger().warning("[Languagy] The author should be using the new LanguagyImplementation annotation.");
-		
 		setup(plugin, fallback);
 	}
 	
-	public Translator(@NonNull Plugin plugin, @NonNull File fallback) {
+	public Translator(@NonNull Plugin plugin, File fallback) {
 		setup(plugin, fallback);
 	}
 	
@@ -68,6 +67,17 @@ public class Translator {
 		this.plugin = newPlugin;
 		return this;
 	}
+	
+	/**
+	 * Sets the fallback file
+	 * @param fallback fallback file
+	 * @return translator instance
+	 */
+	public Translator setFallback(File fallback) {
+		this.fallback = fallback;
+		return this;
+	}
+	
 	/**
 	 * 
 	 * @param target Player
@@ -158,6 +168,7 @@ public class Translator {
 	}
 	
 	private void setup(Plugin plugin, File fallback) {
+		
 		if (!fallback.exists()) {
 			plugin.getLogger().warning("[Languagy] Could not initiate new translator: Fallback does not exist!");
 			return;
