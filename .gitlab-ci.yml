@@ -1,0 +1,52 @@
+image: maven:3-jdk-8
+stages:
+    - build
+    - test
+    - deploy
+    
+build:
+    stage: build
+    tags:
+    - languagy
+    script: 
+    - mvn clean package -Drevision=$CI_COMMIT_REF_NAME-$CI_JOB_ID-$CI_COMMIT_SHORT_SHA
+    - mkdir generated_jar
+    - cp target/*.jar generated_jar/Languagy.jar
+    artifacts:
+        name: "Languagy"
+        paths:
+        - "target/"
+        - "generated_jar/*.jar"
+        expire_in: 1 week
+    allow_failure: false
+    
+test:
+    stage: test
+    tags:
+    - languagy
+    script: "mvn verify"
+    allow_failure: true
+    
+deploy:
+    stage: deploy
+    only:
+        refs: 
+            - master
+    tags:
+    - languagy
+    script: 
+        - apt-get --quiet update 
+        - apt-get --quiet install ftp
+        - sh transfer.sh $MC_USERNAME_MAIN $MC_PASSWORD
+deploy_test:
+    stage: deploy
+    only:
+        - branches
+    except:
+        - master
+    tags:
+    - conwy
+    script: 
+        - apt-get --quiet update 
+        - apt-get --quiet install ftp
+        - sh transfer.sh $MC_USERNAME_MAIN $MC_PASSWORD
