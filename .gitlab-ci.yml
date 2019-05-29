@@ -31,7 +31,8 @@ build:
     
 test:
     stage: test
-    script: "./gradlew check”
+    script: 
+    - ./gradlew check
     allow_failure: true
     
 deploy:
