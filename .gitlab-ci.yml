@@ -10,9 +10,9 @@ before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
   
 cache:
-paths:
-    - .gradle/wrapper
-    - .gradle/caches
+    paths:
+    - ".gradle/wrapper"
+    - ".gradle/caches"
     
 build:
     stage: build
