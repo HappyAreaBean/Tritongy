@@ -6,8 +6,6 @@ stages:
     
 build:
     stage: build
-    tags:
-    - languagy
     script: 
     - mvn clean package -Drevision=$CI_COMMIT_REF_NAME-$CI_JOB_ID-$CI_COMMIT_SHORT_SHA
     - mkdir generated_jar
@@ -22,8 +20,6 @@ build:
     
 test:
     stage: test
-    tags:
-    - languagy
     script: "mvn verify"
     allow_failure: true
     
@@ -32,8 +28,6 @@ deploy:
     only:
         refs: 
             - master
-    tags:
-    - languagy
     script: 
         - apt-get --quiet update 
         - apt-get --quiet install ftp
@@ -44,8 +38,6 @@ deploy_test:
         - branches
     except:
         - master
-    tags:
-    - conwy
     script: 
         - apt-get --quiet update 
         - apt-get --quiet install ftp
