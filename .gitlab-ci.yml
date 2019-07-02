@@ -19,13 +19,16 @@ build:
     script: 
     #- mvn clean package -Drevision=$CI_COMMIT_REF_NAME-$CI_JOB_ID-$CI_COMMIT_SHORT_SHA
     - ./gradlew assemble
-    - mkdir generated_jar
-    - cp target/*.jar generated_jar/Languagy.jar
+    - mkdir plugins
+    - cd plugins
+    - mkdir update
+    - cd ..
+    - cp target/*.jar plugins/update/Languagy.jar
     artifacts:
         name: "Languagy"
         paths:
         - "target/"
-        - "generated_jar/*.jar"
+        - "plugins/update/*.jar"
         expire_in: 1 week
     allow_failure: false
     
@@ -41,9 +44,16 @@ deploy:
         refs: 
             - master
     script: 
-        - apt-get --quiet update 
-        - apt-get --quiet install ftp
-        - sh transfer.sh $MC_USERNAME_MAIN $MC_PASSWORD
+        #- apt-get --quiet update 
+        #- apt-get --quiet install ftp
+        - apt-get update -qy
+        - apt-get install -y lftp
+        - cd plugins
+        - cd update
+        - ls
+        - cd ..
+        - cd ..
+        - lftp -e "set ssl:verify-certificate no; open 158.69.5.237; user $MC_USERNAME_MAIN $MC_PASSWORD; mirror -X .* -X .*/ --reverse --verbose --delete plugins/update/ plugins/update/; bye"
 deploy_test:
     stage: deploy
     only:
