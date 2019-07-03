@@ -15,7 +15,7 @@ import net.islandearth.languagy.language.LanguageParser;
 public class PluginEditUI extends UI {
 
 	public PluginEditUI(HookedPlugin plugin) {
-		super((int) roundUp(plugin.getFallbackFolder().listFiles().length + 1, 9), "Test");
+		super((int) roundUp(plugin.getFallbackFolder().listFiles().length + 1, 9), "Edit languages");
 		int current = 0;
 		for (File file : plugin.getFallbackFolder().listFiles()) {
 			if (file.isFile()) {
