@@ -18,6 +18,7 @@ build:
     stage: build
     script: 
     #- mvn clean package -Drevision=$CI_COMMIT_REF_NAME-$CI_JOB_ID-$CI_COMMIT_SHORT_SHA
+    - chmod +x gradlew
     - ./gradlew assemble
     - mkdir plugins
     - cd plugins
