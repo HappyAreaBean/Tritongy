@@ -102,6 +102,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		
 		getConfig().addDefault("Languages.Enabled", languages);
 		getConfig().addDefault("Stats", true);
+		getConfig().addDefault("Debug", false);
 		
 		saveConfig();
 		
@@ -210,5 +211,9 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	}
 
 	@Override
-	public void onLanguagyHook() {}
+	public void onLanguagyHook() {
+		this.translateTester.setDebug(this.getConfig().getBoolean("Debug"));
+		this.getLogger().info("--- TESTING DOWNLOADER ---");
+		this.translateTester.getOptions().externalDirectory("https://www.islandearth.net/plugins/languagy/lang/");
+	}
 }

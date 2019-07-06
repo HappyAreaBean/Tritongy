@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.api.event.PlayerTranslateEvent;
@@ -29,6 +30,12 @@ public class Translator {
 	@Getter @NonNull 
 	private File fallback;
 	
+	@Getter @NonNull
+	private TranslatorOptions options;
+	
+	@Getter @Setter
+	private boolean debug;
+	
 	protected HookedPlugin hook;
 	
 	@Deprecated
@@ -39,6 +46,7 @@ public class Translator {
 	}
 	
 	public Translator(@NonNull Plugin plugin, File fallback) {
+		this.options = new TranslatorOptions(this);
 		setup(plugin, fallback);
 	}
 	
