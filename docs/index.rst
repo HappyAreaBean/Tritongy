@@ -22,6 +22,7 @@ Languagy is designed to have minimal impact on your server performance. It will 
 Automatically sync translations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Languagy will automatically download custom translations for a plugin when a change is detected, keeping any translation files up-to-date.
+
 .. note::
 	Languagy won't download anything other than a .yml file which must also match translation file format for security reasons.
 
@@ -40,7 +41,7 @@ Creating a translator instance
 
 Languagy first requires a fallback language file to use when a language is not found/supported.
 
-.. important::
+.. tip::
 	This will be the default translation file a user will see if their Language is supported. en_gb is commonly used (and recommended!)
 
 
