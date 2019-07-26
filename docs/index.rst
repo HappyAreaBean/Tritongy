@@ -3,18 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Languagy's documentation!
-====================================
+Languagy
+========
 
+Languagy is a Spigot API for providing player-individual languages for plugins. **It supports over __90__ languages**.
+
+Dependencies
+------------
+
+None! Languagy runs by itself and allowing other plugins to hook into it. You're probably here because of another plugin!
+
+Table of Contents
+-----------------
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
