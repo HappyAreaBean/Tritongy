@@ -18,3 +18,20 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   
+Developers
+==========
+
+This section is for developers looking to hook into the Languagy API.
+
+Creating a translator instance
+------------------------------
+
+Languagy first requires a fallback language file to use when a language is not found/supported.
+
+.. important::
+	This will be the default translation file a user will see if their Language is supported. en_gb is commonly used (and recommended!)
+Server Owners
+=============
+
+This section is for server owners looking to use Languagy with a plugin.
