@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -20,18 +20,23 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import co.aikar.commands.PaperCommandManager;
+import io.papermc.lib.PaperLib;
 import lombok.Getter;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.api.Languagy;
 import net.islandearth.languagy.api.LanguagyAPI;
 import net.islandearth.languagy.commands.LanguagyCommand;
+import net.islandearth.languagy.extension.ExtensionManager;
+import net.islandearth.languagy.extension.PlanExtension;
+import net.islandearth.languagy.extension.PlanHook;
 import net.islandearth.languagy.language.Language;
 import net.islandearth.languagy.language.LanguagyImplementation;
 import net.islandearth.languagy.language.LanguagyPluginHook;
 import net.islandearth.languagy.language.Translator;
 import net.islandearth.languagy.listener.InventoryListener;
 import net.islandearth.languagy.listener.JoinListener;
-import net.islandearth.languagy.metrics.Metrics;
+import net.islandearth.languagy.listener.TranslateListener;
 import net.islandearth.languagy.version.VersionChecker;
 import net.islandearth.languagy.version.VersionChecker.Version;
 
@@ -50,6 +55,9 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	
 	@Getter
 	private VersionChecker version;
+	
+	@Getter
+	private ExtensionManager extensionManager;
 	
 	@Override
 	public void onEnable() {
@@ -75,13 +83,17 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 			log.info(" ");
 		}
 		
+		this.extensionManager = new ExtensionManager(this);
 		LanguagyPlugin.plugin = this;
 		if (hookedPlugins == null) this.hookedPlugins = new ArrayList<>();
 		LanguagyAPI.set(this);
 		createConfig();
+		if (!getConfig().getBoolean("Debug")) this.getLogger().warning("Running on silent mode. Enable debug to toggle.");
 		registerCommands();
 		registerListeners();
+		registerExtensions();
 		startMetrics();
+		PaperLib.suggestPaper(this);
 	}
 	
 	@Override
@@ -132,17 +144,8 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	}
 	
 	private void registerCommands() {
-		try {
-			Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-			bukkitCommandMap.setAccessible(true);
-			CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-			commandMap.register("Languagy", new LanguagyCommand(this));
-		} catch (NoSuchFieldException | 
-				SecurityException | 
-				IllegalArgumentException | 
-				IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		PaperCommandManager manager = new PaperCommandManager(this);
+		manager.registerCommand(new LanguagyCommand(this));
 	}
 	
 	private void registerListeners() {
@@ -150,6 +153,9 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		pm.registerEvents(this, this);
 		pm.registerEvents(new InventoryListener(), this);
 		pm.registerEvents(new JoinListener(this), this);
+		TranslateListener tl = new TranslateListener();
+		pm.registerEvents(tl, this);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, tl, 20L, 1000L);
 	}
 	
 	private void startMetrics() {
@@ -176,6 +182,15 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 			this.getLogger().warning("[Languagy] Please enable metrics to keep me motivated!");
 		}
 	}
+	
+	private void registerExtensions() {
+		if (Bukkit.getPluginManager().getPlugin("Plan") != null) {
+			PlanExtension ext = new PlanExtension(this);
+			this.extensionManager.registerExtension(ext);
+			PlanHook ph = new PlanHook();
+			ph.registerExtensions(ext);
+		}
+	}
 
 	@Override
 	public List<HookedPlugin> getHookedPlugins() {
@@ -187,11 +202,11 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		Plugin plugin = ple.getPlugin();
 		if (plugin.getDescription().getDepend().contains("Languagy") || plugin.getDescription().getSoftDepend().contains("Languagy") || plugin.getName().equals("Languagy")) {
 			for (Field field : plugin.getClass().getDeclaredFields()) {
-				plugin.getLogger().info("[Languagy] Found field " + field.getName() + " in " + plugin.getClass().toString() + ".");
+				if (getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Found field " + field.getName() + " in " + plugin.getClass().toString() + ".");
 				if (field.getAnnotation(LanguagyImplementation.class) != null) {
 					if (LanguagyPluginHook.class.isInstance(plugin)) {
 						LanguagyImplementation implementation = field.getAnnotation(LanguagyImplementation.class);
-						plugin.getLogger().info("[Languagy] Found annotation " + implementation.toString() + " on field " + field.getName() + ".");
+						if (getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Found annotation " + implementation.toString() + " on field " + field.getName() + ".");
 						field.setAccessible(true);
 						try {
 							field.set(plugin, new Translator(plugin, new File(implementation.fallbackFile())));

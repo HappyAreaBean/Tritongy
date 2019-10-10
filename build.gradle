@@ -1,5 +1,6 @@
 plugins {
-	id 'net.ltgt.apt' version '0.10'
+	id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'java'
 }
 
 apply plugin: 'java'
@@ -14,14 +15,20 @@ repositories {
     
     mavenCentral()
     mavenLocal()
+    maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url= 'https://repo.codemc.org/repository/maven-public' }
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://dl.bintray.com/rsl1122/Plan-repository' }
     maven {
         name = 'destroystokyo-repo'
         url = 'https://repo.destroystokyo.com/repository/maven-public/'
     }
+    
     maven {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+    
     maven {
     	name = 'maxim'
     	url = 'http://repo.mvdw-software.com/content/groups/public/'
@@ -30,13 +37,29 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compileOnly 'org.spigotmc:spigot:1.14-R0.1-SNAPSHOT'
-    compileOnly 'net.islandearth:updater:1.0.2-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot:1.13.2-R0.1-SNAPSHOT'
+    implementation 'commons-codec:commons-codec:1.13'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
+    implementation 'io.papermc:paperlib:1.0.2'
+    implementation 'org.bstats:bstats-bukkit:1.5'
+    implementation 'com.github.WesJD:AnvilGUI:master-SNAPSHOT'
     compileOnly 'be.maximvdw:spigotsite-api:0.3.2-SNAPSHOT'
-    compileOnly 'org.projectlombok:lombok:1.18.2'
-    compileOnly 'com.djrapitops:plan:4.5.1-SNAPSHOT'
-	apt 'org.projectlombok:lombok:1.18.2'
+    compileOnly 'com.djrapitops:Plan-api:5.0-R0.3'
+	compileOnly 'org.projectlombok:lombok:1.18.10'
+	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 }
+
+shadowJar {
+	relocate 'net.wesjd.anvilgui', 'net.islandearth.languagy.anvilgui'
+   	relocate 'org.apache.commons.codec', 'net.islandearth.languagy.commons.codec'
+   	relocate 'org.apache.commons.io', 'net.islandearth.languagy.commons.io'
+   	relocate 'co.aikar.commands', 'net.islandearth.languagy.acf'
+   	relocate 'io.papermc.lib', 'net.islandearth.languagy.paperlib'
+   	relocate 'org.bstats', 'net.islandearth.languagy.metrics'
+}
+
+build.dependsOn shadowJar
 
 import org.apache.tools.ant.filters.ReplaceTokens
 

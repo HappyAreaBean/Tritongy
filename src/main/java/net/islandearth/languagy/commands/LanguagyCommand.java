@@ -1,30 +1,27 @@
 package net.islandearth.languagy.commands;
 
-import java.util.Arrays;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.ui.EditUI;
 
-public class LanguagyCommand extends BukkitCommand {
+@CommandAlias("lgy")
+public class LanguagyCommand extends BaseCommand {
 	
 	private LanguagyPlugin plugin;
 	
 	public LanguagyCommand(LanguagyPlugin plugin) {
-		super("Languagy");
-		this.description = "Languagy Information";
-		this.usageMessage = "/Languagy";
-		this.setAliases(Arrays.asList("lgy"));
 		this.plugin = plugin;
 	}
 
-	@Override
-	public boolean execute(CommandSender sender, String arg1, String[] args) {
+	@Default
+	public boolean onCommand(CommandSender sender, String[] args) {
 		switch (args.length) {
 			case 0:
 				sender.sendMessage(ChatColor.WHITE + "Languagy is a Spigot API for providing player-individual languages for plugins.");
@@ -93,7 +90,7 @@ public class LanguagyCommand extends BukkitCommand {
 				break;
 			default:
 				sender.sendMessage(ChatColor.WHITE + "Languagy is a Spigot API for providing player-individual languages for plugins.");
-				sender.sendMessage(ChatColor.YELLOW + "© 2018 IslandEarth. All rights reserved. Made with" + " ❤ " + "by SamB440.");
+				sender.sendMessage(ChatColor.YELLOW + "© 2019 IslandEarth. All rights reserved.");
 				break;
 		} return true;
 	}

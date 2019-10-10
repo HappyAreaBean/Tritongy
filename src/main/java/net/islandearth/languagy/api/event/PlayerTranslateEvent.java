@@ -8,7 +8,6 @@ import net.islandearth.languagy.api.HookedPlugin;
 
 public class PlayerTranslateEvent extends Event {
 	
-	private HandlerList handlers = new HandlerList();
 	private Player player;
 	private String path;
 	private Object translation;
@@ -20,6 +19,16 @@ public class PlayerTranslateEvent extends Event {
 		this.translation = translation;
 		this.plugin = plugin;
 	}
+	
+	private static final HandlerList HANDLERS = new HandlerList();
+
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 	
 	public Player getPlayer() {
 		return player;
@@ -39,10 +48,5 @@ public class PlayerTranslateEvent extends Event {
 	
 	public HookedPlugin getHookedPlugin() {
 		return plugin;
-	}
-	
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
 	}
 }

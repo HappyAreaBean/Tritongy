@@ -207,9 +207,9 @@ public class Translator {
 			File file = new File(lang.toString() + "/" + language.getCode() + ".yml");
 			if (!file.exists() || !file.getName().contains(language.getCode())) {
 				String reason = !file.exists() ? "Does not exist" : "File name is incorrect";
-				plugin.getLogger().warning("[Languagy] Language file could not be loaded: " + file.getName() + ". Reason: " + reason);
+				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().warning("[Languagy] Language file could not be loaded: " + file.getName() + ". Reason: " + reason);
 			} else {
-				plugin.getLogger().info("[Languagy] Loaded language '" + language.getCode() + "'.");
+				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Loaded language '" + language.getCode() + "'.");
 			}
 		}
 	}

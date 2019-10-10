@@ -7,7 +7,6 @@ import net.islandearth.languagy.api.HookedPlugin;
 
 public class PluginHookEvent extends Event {
 	
-	private HandlerList handlers = new HandlerList();
 	private HookedPlugin plugin;
 	
 	public PluginHookEvent(HookedPlugin plugin) {
@@ -18,8 +17,13 @@ public class PluginHookEvent extends Event {
 		return plugin;
 	}
 
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+	private static final HandlerList HANDLERS = new HandlerList();
+
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 }

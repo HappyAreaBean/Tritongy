@@ -30,7 +30,6 @@ public class ValueEditUI extends UI {
 			if (config.isSet(key)
 					&& (config.isString(key)
 					|| config.isBoolean(key))) {
-				KeyType type = config.isString(key) ? KeyType.STRING : KeyType.BOOLEAN;
 				ItemStack lang = new ItemStack(Material.PAPER);
 				ItemMeta lm = lang.getItemMeta();
 				lm.setDisplayName(ChatColor.WHITE + key);
@@ -40,7 +39,7 @@ public class ValueEditUI extends UI {
 					overflow.put(key, lang);
 				} else {
 					setItem(current, lang, player -> {
-						openAnvil(player, config, key, file, type);
+						openAnvil(player, config, key, file);
 					});
 				}
 				current++;
@@ -66,12 +65,11 @@ public class ValueEditUI extends UI {
 		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 		for (String key : overflow.keySet()) {
 			ItemStack item = overflow.get(key);
-			KeyType type = config.isString(key) ? KeyType.STRING : KeyType.BOOLEAN;
 			if (current > MAX_SIZE) {
 				extraOverflow.put(key, item);
 			} else {
 				setItem(current, item, player2 -> {
-					openAnvil(player2, config, key, file, type);
+					openAnvil(player2, config, key, file);
 				});
 			}
 			current++;
@@ -94,18 +92,22 @@ public class ValueEditUI extends UI {
 		});
 	}
 	
-	private void openAnvil(Player player, FileConfiguration config, String path, File file, KeyType type) {
-		new AnvilGUI(LanguagyPlugin.getPlugin(), player, type.toString(), (oPlayer, reply) -> {
-			if (!reply.isEmpty()) {
-				config.set(path, reply);
-				saveConfig(config, file);
-				player.closeInventory();
-				player.sendMessage(ChatColor.GREEN + "Configuration saved.");
-			    return null;
-			} else {
-				return "Invalid value!";
-			}
-		});
+	private void openAnvil(Player player, FileConfiguration config, String path, File file) {
+		new AnvilGUI.Builder()
+		    .onComplete((oPlayer, reply) -> {
+		        if(!reply.isEmpty()) {
+					config.set(path, reply);
+					saveConfig(config, file);
+					player.closeInventory();
+					player.sendMessage(ChatColor.GREEN + "Configuration saved.");
+		            return AnvilGUI.Response.close();
+		        } else {
+		            return AnvilGUI.Response.text("You must enter a valid value.");
+		        }
+		    })
+		    .preventClose()                        
+		    .plugin(LanguagyPlugin.getPlugin())
+		.open(player);
 	}
 	
 	private void saveConfig(FileConfiguration config, File file) {
@@ -114,10 +116,5 @@ public class ValueEditUI extends UI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private enum KeyType {
-		BOOLEAN,
-		STRING
 	}
 }

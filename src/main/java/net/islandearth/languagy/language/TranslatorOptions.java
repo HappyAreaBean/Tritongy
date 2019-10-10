@@ -5,12 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.libs.org.apache.commons.codec.digest.DigestUtils;
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 
 import lombok.AllArgsConstructor;
 
