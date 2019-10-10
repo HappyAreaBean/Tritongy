@@ -1,4 +1,4 @@
-image: gradle:latest
+image: gradle:jdk-8
 variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 before_script:
