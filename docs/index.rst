@@ -6,14 +6,14 @@
 Languagy
 ========
 
-Languagy is a Spigot API for providing player-individual languages for plugins. **It supports over __90__ languages**.
+Languagy is a Spigot API for providing player-individual languages for plugins. **It supports over 90 languages**.
 
 In-game editor
 ^^^^^^^^^^^^^^
 You can easily edit all translations of any plugin using the command */lgy edit* which will bring up a GUI.
 
-.. warning::
-	This only supports 1.14. Don't bother trying in 1.13 or less! You should just update anyway... there are some really cool features!
+.. note::
+	Since *1.1.8* this feature now supports all versions.
 
 No lag
 ^^^^^^
@@ -31,6 +31,10 @@ Dependencies
 
 None! Languagy runs by itself and allowing other plugins to hook into it. You're probably here because of another plugin!
    
+Keeping up with translations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+As Languagy offers so many languages, it is important to find software capable of tracking translations by your community. I personally recommend Crowdin (Paid) or, as a free, open-source alternative: Weblate.
+
 Developers
 ==========
 
