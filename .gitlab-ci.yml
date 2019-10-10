@@ -1,4 +1,4 @@
-image: java:8-jdk
+image: gradle:latest
 variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 before_script:
@@ -9,8 +9,6 @@ stages:
     - test
 build:
     stage: build
-    tags:
-    - gradle
     script:
     - ./gradlew shadowJar
     artifacts:
@@ -21,8 +19,6 @@ build:
     - master
 test:
     stage: test
-    tags:
-    - gradle
     script: gradle check
     cache:
         key: "$CI_COMMIT_REF_NAME"
