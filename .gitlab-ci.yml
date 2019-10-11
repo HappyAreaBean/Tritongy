@@ -5,7 +5,7 @@ before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - gradle wrapper --gradle-version 5.6.2
 stages:
-    - build
+    #- build
     - test
 #build:
     #stage: build
