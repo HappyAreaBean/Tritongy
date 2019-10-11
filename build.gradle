@@ -35,6 +35,13 @@ repositories {
     }
 }
 
+javadoc {
+	exclude 'net/islandearth/languagy/ui/**'
+	exclude 'net/islandearth/languagy/update/**'
+	exclude 'net/islandearth/languagy/commands/**'
+	exclude 'net/islandearth/languagy/listener/**'
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compileOnly 'org.spigotmc:spigot:1.13.2-R0.1-SNAPSHOT'

@@ -28,7 +28,7 @@ public class EditUI extends UI {
 				hooked.setItemMeta(hm);
 				
 				setItem(current, hooked, player -> {
-					new PluginEditUI(hookedPlugin).openInventory(player);
+					new PluginEditUI(hookedPlugin, null).openInventory(player);
 				});
 				current++;
 			}

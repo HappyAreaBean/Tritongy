@@ -19,17 +19,15 @@ import net.wesjd.anvilgui.AnvilGUI;
 
 public class ValueEditUI extends UI {
 	
-	protected int MAX_SIZE = 44;
+	protected static final int MAX_SIZE = 44;
 
 	public ValueEditUI(HookedPlugin plugin, File file) {
-		super(54, plugin.getPlugin().getName());
+		super(54, plugin.getPlugin().getName() + " : " + file.getName().replace(".yml", ""));
 		int current = 0;
 		Map<String, ItemStack> overflow = new HashMap<>();
 		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 		for (String key : config.getValues(true).keySet()) {
-			if (config.isSet(key)
-					&& (config.isString(key)
-					|| config.isBoolean(key))) {
+			if (config.isSet(key)) {
 				ItemStack lang = new ItemStack(Material.PAPER);
 				ItemMeta lm = lang.getItemMeta();
 				lm.setDisplayName(ChatColor.WHITE + key);
@@ -104,8 +102,7 @@ public class ValueEditUI extends UI {
 		        } else {
 		            return AnvilGUI.Response.text("You must enter a valid value.");
 		        }
-		    })
-		    .preventClose()                        
+		    })                      
 		    .plugin(LanguagyPlugin.getPlugin())
 		.open(player);
 	}

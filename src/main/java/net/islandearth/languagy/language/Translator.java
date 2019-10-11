@@ -38,6 +38,10 @@ public class Translator {
 	
 	protected HookedPlugin hook;
 	
+	/**
+	 * @deprecated
+	 * @see #Translator(Plugin, File)
+	 */
 	@Deprecated
 	public Translator(@NonNull JavaPlugin plugin, @NonNull File fallback) {
 		plugin.getLogger().warning("[Languagy] Plugin is using deprecated translator constructor! Please nag the author(s), " + plugin.getDescription().getAuthors() + ", about this!");
@@ -53,7 +57,7 @@ public class Translator {
 	/**
 	 * Sets the display material in the editor UI.
 	 * @param material material to display
-	 * @return translator instance
+	 * @return {@link Translator} instance
 	 */
 	public Translator setDisplay(@NonNull Material material) {
 		hook.setDisplay(material);
@@ -63,7 +67,7 @@ public class Translator {
 	/**
 	 * @deprecated use of {@link Plugin} is now preferred.
 	 * @param newPlugin
-	 * @return translator instance
+	 * @return {@link Translator} instance
 	 * @see #setPlugin(Plugin)
 	 */
 	@Deprecated
@@ -71,6 +75,11 @@ public class Translator {
 		return setPlugin(Bukkit.getPluginManager().getPlugin(newPlugin.getName()));
 	}
 	
+	/**
+	 * Sets the plugin to use, this is unsafe and should be used with caution
+	 * @param newPlugin new plugin to set
+	 * @return {@link Translator} instance
+	 */
 	public Translator setPlugin(Plugin newPlugin) {
 		this.plugin = newPlugin;
 		return this;
@@ -79,7 +88,7 @@ public class Translator {
 	/**
 	 * Sets the fallback file
 	 * @param fallback fallback file
-	 * @return translator instance
+	 * @return {@link Translator} instance
 	 */
 	public Translator setFallback(File fallback) {
 		this.fallback = fallback;
