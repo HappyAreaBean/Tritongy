@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.annotation.NumberProvider;
 import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.icon.Color;
@@ -27,6 +28,17 @@ public class PlanExtension extends AbstractExtension implements DataExtension {
 	
 	public PlanExtension(LanguagyPlugin plugin) {
 		this.plugin = plugin;
+		try {
+			plugin.getLogger().info("Registering extension...");
+		    ExtensionService.getInstance().register(this);
+		} catch (NoClassDefFoundError planIsNotInstalled) {
+		    plugin.getLogger().info("Plan is not installed.");
+		} catch (IllegalStateException planIsNotEnabled) {
+			plugin.getLogger().severe("Unable to hook into plan - not enabled yet. Did it fail to load?");
+		} catch (IllegalArgumentException dataExtensionImplementationIsInvalid) {
+			plugin.getLogger().severe("Unable to hook into plan - extension was invalid.");
+			dataExtensionImplementationIsInvalid.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -42,8 +54,7 @@ public class PlanExtension extends AbstractExtension implements DataExtension {
 	@Override
     public CallEvents[] callExtensionMethodsOn() {
         return new CallEvents[]{
-                CallEvents.PLAYER_JOIN,
-                CallEvents.PLAYER_LEAVE
+        		CallEvents.SERVER_PERIODICAL
         };
     }
 	
@@ -67,7 +78,6 @@ public class PlanExtension extends AbstractExtension implements DataExtension {
 				}
         	}
         }
-        System.out.println(count);
         return count;
     }
 }

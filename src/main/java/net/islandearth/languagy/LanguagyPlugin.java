@@ -29,7 +29,6 @@ import net.islandearth.languagy.api.LanguagyAPI;
 import net.islandearth.languagy.commands.LanguagyCommand;
 import net.islandearth.languagy.extension.ExtensionManager;
 import net.islandearth.languagy.extension.PlanExtension;
-import net.islandearth.languagy.extension.PlanHook;
 import net.islandearth.languagy.language.Language;
 import net.islandearth.languagy.language.LanguagyImplementation;
 import net.islandearth.languagy.language.LanguagyPluginHook;
@@ -187,8 +186,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		if (Bukkit.getPluginManager().getPlugin("Plan") != null) {
 			PlanExtension ext = new PlanExtension(this);
 			this.extensionManager.registerExtension(ext);
-			PlanHook ph = new PlanHook();
-			ph.registerExtensions(ext);
 		}
 	}
 
