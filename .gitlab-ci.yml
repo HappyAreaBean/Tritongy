@@ -7,16 +7,16 @@ before_script:
 stages:
     - build
     - test
-build:
-    stage: build
-    script:
-    - ./gradlew shadowJar
-    artifacts:
-        paths:
-        - build/libs/*.jar
-        expire_in: 1 week
-    only:
-    - master
+#build:
+    #stage: build
+    #script:
+    #- ./gradlew shadowJar
+    #artifacts:
+        #paths:
+       # - build/libs/*.jar
+       # expire_in: 1 week
+    #only:
+    #- master
 test:
     stage: test
     script: gradle check
