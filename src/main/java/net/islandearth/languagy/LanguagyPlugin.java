@@ -28,7 +28,6 @@ import net.islandearth.languagy.api.Languagy;
 import net.islandearth.languagy.api.LanguagyAPI;
 import net.islandearth.languagy.commands.LanguagyCommand;
 import net.islandearth.languagy.extension.ExtensionManager;
-import net.islandearth.languagy.extension.PlanExtension;
 import net.islandearth.languagy.language.Language;
 import net.islandearth.languagy.language.LanguagyImplementation;
 import net.islandearth.languagy.language.LanguagyPluginHook;
@@ -82,7 +81,13 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 			log.info(" ");
 		}
 		
-		this.extensionManager = new ExtensionManager(this);
+		
+		try {
+			if (Bukkit.getPluginManager().getPlugin("Plan") != null) this.extensionManager = new ExtensionManager(this);
+		} catch (Exception e) {
+			
+		}
+		
 		LanguagyPlugin.plugin = this;
 		if (hookedPlugins == null) this.hookedPlugins = new ArrayList<>();
 		LanguagyAPI.set(this);
@@ -90,7 +95,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		if (!getConfig().getBoolean("Debug")) this.getLogger().warning("Running on silent mode. Enable debug to toggle.");
 		registerCommands();
 		registerListeners();
-		registerExtensions();
 		startMetrics();
 		PaperLib.suggestPaper(this);
 	}
@@ -179,13 +183,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		} else {
 			this.getLogger().warning("[Languagy] Metrics is disabled! :(");
 			this.getLogger().warning("[Languagy] Please enable metrics to keep me motivated!");
-		}
-	}
-	
-	private void registerExtensions() {
-		if (Bukkit.getPluginManager().getPlugin("Plan") != null) {
-			PlanExtension ext = new PlanExtension(this);
-			this.extensionManager.registerExtension(ext);
 		}
 	}
 

@@ -3,6 +3,8 @@ package net.islandearth.languagy.extension;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+
 import net.islandearth.languagy.LanguagyPlugin;
 
 public class ExtensionManager {
@@ -13,6 +15,14 @@ public class ExtensionManager {
 	
 	public ExtensionManager(LanguagyPlugin plugin) {
 		this.plugin = plugin;
+		
+		try {
+			if (Bukkit.getPluginManager().getPlugin("Plan") != null) {
+				this.registerExtension(new PlanExtension(plugin));
+			}
+		} catch (Exception e) {
+			
+		}
 	}
 	
 	public boolean hasExtension(String name) {
