@@ -156,9 +156,11 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		pm.registerEvents(this, this);
 		pm.registerEvents(new InventoryListener(), this);
 		pm.registerEvents(new JoinListener(this), this);
-		TranslateListener tl = new TranslateListener();
-		pm.registerEvents(tl, this);
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, tl, 20L, 1000L);
+		if (Bukkit.getPluginManager().getPlugin("Plan") != null) {
+			TranslateListener tl = new TranslateListener();
+			pm.registerEvents(tl, this);
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, tl, 20L, 1000L);
+		}
 	}
 	
 	private void startMetrics() {

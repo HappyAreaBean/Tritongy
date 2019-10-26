@@ -31,20 +31,16 @@ public class TranslateListener implements Listener, Runnable {
 				putMap.put(player.getLocale(), 1);
 				amount.put(pte.getHookedPlugin(), new TranslateCount(putMap));
 			} else {
-				System.out.println(3);
 				TranslateCount count = amount.get(pte.getHookedPlugin());
 				count.getAmount().replace(player.getLocale(), count.getAmount().get(player.getLocale()) + 1);
 			}
 		} else {
-			System.out.println(4);
 			String language = pte.getHookedPlugin().getFallback().getName().replace(".yml", "");
 			if (!amount.containsKey(pte.getHookedPlugin())) {
-				System.out.println(5);
 				Map<String, Integer> putMap = new HashMap<>();
 				putMap.put(language, 1);
 				amount.put(pte.getHookedPlugin(), new TranslateCount(putMap));
 			} else {
-				System.out.println(6);
 				TranslateCount count = amount.get(pte.getHookedPlugin());
 				count.getAmount().replace(language, count.getAmount().get(language) + 1);
 			}
