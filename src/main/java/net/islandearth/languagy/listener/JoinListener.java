@@ -19,7 +19,7 @@ public class JoinListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent pje) {
 		Player player = pje.getPlayer();
-		if (player.isOp()) {
+		if (player.isOp() && plugin.getConfig().getBoolean("Check for updates")) {
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				Updater updater = new Updater(plugin);
 				String updates = updater.getLatestVersion();
