@@ -110,8 +110,11 @@ public class Translator {
 		if (file.exists()) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 			if (config.getString(path) == null) {
-				plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist! Try regenerating language files?");
-				return "";
+				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist in target locale! Try regenerating language files?");
+				FileConfiguration fallbackConfig = YamlConfiguration.loadConfiguration(fallback);
+				String translation = ChatColor.translateAlternateColorCodes('&', fallbackConfig.getString(path));
+				Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, translation, hook));
+				return translation;
 			}
 			
 			String translation = ChatColor.translateAlternateColorCodes('&', config.getString(path));
@@ -120,7 +123,7 @@ public class Translator {
 		} else {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
 			if (config.getString(path) == null) {
-				plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist! Try regenerating language files?");
+				plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist anywhere! Try regenerating language files?");
 				return "";
 			}
 			

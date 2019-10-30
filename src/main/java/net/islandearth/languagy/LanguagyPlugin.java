@@ -118,6 +118,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		getConfig().addDefault("Languages.Enabled", languages);
 		getConfig().addDefault("Stats", true);
 		getConfig().addDefault("Debug", false);
+		getConfig().addDefault("Check for updates", true);
 		
 		saveConfig();
 		
