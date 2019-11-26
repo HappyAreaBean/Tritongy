@@ -1,10 +1,5 @@
 package net.islandearth.languagy.language;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -12,12 +7,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import lombok.AllArgsConstructor;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
 
-@AllArgsConstructor
 public class TranslatorOptions {
 	
-	protected Translator translator;
+	private final Translator translator;
+
+	TranslatorOptions(Translator translator) {
+		this.translator = translator;
+	}
 	
 	/**
 	 * Downloads all available files from a directory.

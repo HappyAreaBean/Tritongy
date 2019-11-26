@@ -1,5 +1,7 @@
 package net.islandearth.languagy.listener;
 
+import net.islandearth.languagy.LanguagyPlugin;
+import net.islandearth.languagy.update.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -7,14 +9,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import lombok.AllArgsConstructor;
-import net.islandearth.languagy.LanguagyPlugin;
-import net.islandearth.languagy.update.Updater;
-
-@AllArgsConstructor
 public class JoinListener implements Listener {
 	
 	private LanguagyPlugin plugin;
+
+	public JoinListener(LanguagyPlugin plugin) {
+		this.plugin = plugin;
+	}
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent pje) {

@@ -53,8 +53,6 @@ dependencies {
     implementation 'com.github.WesJD:AnvilGUI:master-SNAPSHOT'
     compileOnly 'be.maximvdw:spigotsite-api:0.3.2-SNAPSHOT'
     compileOnly 'com.djrapitops:Plan-api:5.0-R0.3'
-	compileOnly 'org.projectlombok:lombok:1.18.10'
-	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 }
 
 shadowJar {

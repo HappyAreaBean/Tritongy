@@ -1,20 +1,17 @@
 package net.islandearth.languagy.listener;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+import net.islandearth.languagy.LanguagyPlugin;
+import net.islandearth.languagy.api.HookedPlugin;
+import net.islandearth.languagy.api.event.PlayerTranslateEvent;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import net.islandearth.languagy.LanguagyPlugin;
-import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.api.event.PlayerTranslateEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TranslateListener implements Listener, Runnable {
 	
@@ -77,11 +74,17 @@ public class TranslateListener implements Listener, Runnable {
 		});
 		amount.clear();
 	}
-	
-	@AllArgsConstructor
+
 	private class TranslateCount {
-		
-		@Getter
+
 		private Map<String, Integer> amount;
+
+		public TranslateCount(Map<String, Integer> amount) {
+			this.amount = amount;
+		}
+
+		public Map<String, Integer> getAmount() {
+			return amount;
+		}
 	}
 }

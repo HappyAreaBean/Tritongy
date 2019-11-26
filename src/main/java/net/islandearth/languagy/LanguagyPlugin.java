@@ -1,28 +1,7 @@
 package net.islandearth.languagy;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.apache.commons.lang.StringUtils;
-import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import co.aikar.commands.PaperCommandManager;
 import io.papermc.lib.PaperLib;
-import lombok.Getter;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.api.Languagy;
 import net.islandearth.languagy.api.LanguagyAPI;
@@ -37,24 +16,38 @@ import net.islandearth.languagy.listener.JoinListener;
 import net.islandearth.languagy.listener.TranslateListener;
 import net.islandearth.languagy.version.VersionChecker;
 import net.islandearth.languagy.version.VersionChecker.Version;
+import org.apache.commons.lang.StringUtils;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, LanguagyPluginHook {
 	
 	private Logger log = Bukkit.getLogger();
 	
 	@LanguagyImplementation(fallbackFile = "plugins/Languagy/lang/en_gb.yml")
-	@Getter
 	private Translator translateTester;
 	
 	private List<HookedPlugin> hookedPlugins;
-	
-	@Getter
+
 	private static LanguagyPlugin plugin;
-	
-	@Getter
+
 	private VersionChecker version;
-	
-	@Getter
 	private ExtensionManager extensionManager;
 	
 	@Override
@@ -194,6 +187,24 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		return hookedPlugins;
 	}
 
+	@Override
+	public VersionChecker getVersion() {
+		return version;
+	}
+
+	@Override
+	public ExtensionManager getExtensionManager() {
+		return extensionManager;
+	}
+
+	public Translator getTranslateTester() {
+		return translateTester;
+	}
+
+	public static LanguagyPlugin getPlugin() {
+		return plugin;
+	}
+
 	@EventHandler
 	public void enable(PluginEnableEvent ple) {
 		Plugin plugin = ple.getPlugin();
@@ -201,7 +212,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 			for (Field field : plugin.getClass().getDeclaredFields()) {
 				if (getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Found field " + field.getName() + " in " + plugin.getClass().toString() + ".");
 				if (field.getAnnotation(LanguagyImplementation.class) != null) {
-					if (LanguagyPluginHook.class.isInstance(plugin)) {
+					if (plugin instanceof LanguagyPluginHook) {
 						LanguagyImplementation implementation = field.getAnnotation(LanguagyImplementation.class);
 						if (getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Found annotation " + implementation.toString() + " on field " + field.getName() + ".");
 						field.setAccessible(true);

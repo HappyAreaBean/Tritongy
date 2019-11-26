@@ -1,9 +1,5 @@
 package net.islandearth.languagy.language;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@AllArgsConstructor
 public enum Language {
 	ENGLISH("en_gb"),
 	GERMAN("de_de"),
@@ -96,7 +92,14 @@ public enum Language {
 	YORUBA("yo_ng"),
 	CHINESE_SIMPLIFIED("zh_cn"),
 	CHINESE_TRADITIONAL("zh_tw");
-	
-	@Getter
+
 	private String code;
+
+	Language(String code) {
+		this.code = code;
+	}
+
+	public String getCode() {
+		return code;
+	}
 }

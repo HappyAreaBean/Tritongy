@@ -1,10 +1,9 @@
 package net.islandearth.languagy.language;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import net.islandearth.languagy.LanguagyPlugin;
+import net.islandearth.languagy.api.HookedPlugin;
+import net.islandearth.languagy.api.event.PlayerTranslateEvent;
+import net.islandearth.languagy.api.event.PluginHookEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,27 +12,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import net.islandearth.languagy.LanguagyPlugin;
-import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.api.event.PlayerTranslateEvent;
-import net.islandearth.languagy.api.event.PluginHookEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Translator {
-	
-	@Getter @NonNull 
+
 	private Plugin plugin;
-	
-	@Getter @NonNull 
+
 	private File fallback;
-	
-	@Getter @NonNull
+
 	private TranslatorOptions options;
-	
-	@Getter @Setter
+
 	private boolean debug;
 	
 	protected HookedPlugin hook;
@@ -43,13 +36,13 @@ public class Translator {
 	 * @see #Translator(Plugin, File)
 	 */
 	@Deprecated
-	public Translator(@NonNull JavaPlugin plugin, @NonNull File fallback) {
+	public Translator(@NotNull JavaPlugin plugin, @NotNull File fallback) {
 		plugin.getLogger().warning("[Languagy] Plugin is using deprecated translator constructor! Please nag the author(s), " + plugin.getDescription().getAuthors() + ", about this!");
 		plugin.getLogger().warning("[Languagy] The author should be using the new LanguagyImplementation annotation.");
 		setup(plugin, fallback);
 	}
 	
-	public Translator(@NonNull Plugin plugin, File fallback) {
+	public Translator(@NotNull Plugin plugin, File fallback) {
 		this.options = new TranslatorOptions(this);
 		setup(plugin, fallback);
 	}
@@ -59,7 +52,7 @@ public class Translator {
 	 * @param material material to display
 	 * @return {@link Translator} instance
 	 */
-	public Translator setDisplay(@NonNull Material material) {
+	public Translator setDisplay(@NotNull Material material) {
 		hook.setDisplay(material);
 		return this;
 	}
@@ -104,7 +97,7 @@ public class Translator {
 	 * If your plugin does not support their language,
 	 * your fallback file will be used.
 	 */
-	public String getTranslationFor(@NonNull Player target, @NonNull String path) {
+	public String getTranslationFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
 		if (file.exists()) {
@@ -142,7 +135,7 @@ public class Translator {
 	 * If your plugin does not support their language,
 	 * your fallback file will be used.
 	 */
-	public List<String> getTranslationListFor(@NonNull Player target, @NonNull String path) {
+	public List<String> getTranslationListFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
 		if (file.exists()) {
@@ -181,7 +174,7 @@ public class Translator {
 	 * @param target Player
 	 * @return configuration for player's language
 	 */
-	public FileConfiguration getFileConfiguration(@NonNull Player target) {
+	public FileConfiguration getFileConfiguration(@NotNull Player target) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
 		return YamlConfiguration.loadConfiguration(file);
@@ -224,5 +217,25 @@ public class Translator {
 				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Loaded language '" + language.getCode() + "'.");
 			}
 		}
+	}
+
+	public File getFallback() {
+		return fallback;
+	}
+
+	public TranslatorOptions getOptions() {
+		return options;
+	}
+
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
+	public Plugin getPlugin() {
+		return plugin;
 	}
 }

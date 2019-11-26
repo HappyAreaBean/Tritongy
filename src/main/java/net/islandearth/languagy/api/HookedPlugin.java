@@ -1,27 +1,41 @@
 package net.islandearth.languagy.api;
 
-import java.io.File;
-
 import org.bukkit.Material;
 import org.bukkit.plugin.Plugin;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.io.File;
 
-@AllArgsConstructor
 public class HookedPlugin {
 
-	@Getter
 	private Plugin plugin;
-	
-	@Getter 
-	@Setter
 	private Material display;
-	
-	@Getter
 	private File fallbackFolder;
-	
-	@Getter
 	private File fallback;
+
+	public HookedPlugin(Plugin plugin, Material display, File fallbackFolder, File fallback) {
+		this.plugin = plugin;
+		this.display = display;
+		this.fallbackFolder = fallbackFolder;
+		this.fallback = fallback;
+	}
+
+	public Plugin getPlugin() {
+		return plugin;
+	}
+
+	public Material getDisplay() {
+		return display;
+	}
+
+	public void setDisplay(Material display) {
+		this.display = display;
+	}
+
+	public File getFallbackFolder() {
+		return fallbackFolder;
+	}
+
+	public File getFallback() {
+		return fallback;
+	}
 }

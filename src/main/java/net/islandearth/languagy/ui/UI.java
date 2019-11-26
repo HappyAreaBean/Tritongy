@@ -5,24 +5,42 @@
  ******************************************************************************/
 package net.islandearth.languagy.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import lombok.Getter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class UI {
-	
-	@Getter private Inventory inventory;
-	@Getter private UUID uuid;
-	@Getter private Map<Integer, ItemClick> actions;
-    @Getter private static Map<UUID, UI> inventories = new HashMap<UUID, UI>();
-    @Getter private static Map<UUID, UUID> open = new HashMap<UUID, UUID>();
+
+	private Inventory inventory;
+	private UUID uuid;
+	private Map<Integer, ItemClick> actions;
+	private static Map<UUID, UI> inventories = new HashMap<UUID, UI>();
+	private static Map<UUID, UUID> open = new HashMap<UUID, UUID>();
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public Map<Integer, ItemClick> getActions() {
+		return actions;
+	}
+
+	public static Map<UUID, UI> getInventories() {
+		return inventories;
+	}
+
+	public static Map<UUID, UUID> getOpen() {
+		return open;
+	}
 	
 	public UI(int size, String name) {
 		this.inventory = Bukkit.createInventory(null, size, name);
@@ -49,7 +67,7 @@ public abstract class UI {
         for (Player pl : Bukkit.getOnlinePlayers()) {
             UUID uuid = open.get(pl.getUniqueId());
             if (uuid != null && uuid.equals(this.uuid)) {
-            	if (open.containsKey(pl.getUniqueId())) open.remove(pl.getUniqueId());
+				open.remove(pl.getUniqueId());
             }
         } inventories.remove(uuid);
     }

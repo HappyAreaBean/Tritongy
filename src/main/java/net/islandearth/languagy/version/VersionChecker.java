@@ -2,16 +2,10 @@ package net.islandearth.languagy.version;
 
 import org.bukkit.Bukkit;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 public class VersionChecker {
-	
-	@Getter
-	public Version currentVersion;
-	
-	@Getter
-	public Version latestVersion;
+
+	private Version currentVersion;
+	private Version latestVersion;
 	
 	public VersionChecker() {
 		this.latestVersion = Version.values()[0];
@@ -32,8 +26,15 @@ public class VersionChecker {
 		this.currentVersion = Version.UNSUPPORTED;
 		return false;
 	}
-	
-	@AllArgsConstructor
+
+	public Version getCurrentVersion() {
+		return currentVersion;
+	}
+
+	public Version getLatestVersion() {
+		return latestVersion;
+	}
+
 	public enum Version {
 		v1_14_R1("1.14"),
 		v1_13_R2("1.13.2"),
@@ -45,8 +46,15 @@ public class VersionChecker {
 		v1_8_R9("1.8.9"),
 		v1_8_R8("1.8.8"),
 		UNSUPPORTED("Unsupported");
-		
-		@Getter
+
 		private String id;
+
+		Version(String id) {
+			this.id = id;
+		}
+
+		public String getId() {
+			return id;
+		}
 	}
 }
