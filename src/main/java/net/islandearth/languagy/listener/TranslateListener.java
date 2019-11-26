@@ -23,6 +23,8 @@ public class TranslateListener implements Listener, Runnable {
 	@EventHandler
 	public void onTranslate(PlayerTranslateEvent pte) {
 		Player player = pte.getPlayer();
+		if (player.getLocale() == null || amount == null) return;
+		
 		String lang = pte.getHookedPlugin().getFallback().getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + player.getLocale() + ".yml");
 		if (file.exists()) {
@@ -32,17 +34,21 @@ public class TranslateListener implements Listener, Runnable {
 				amount.put(pte.getHookedPlugin(), new TranslateCount(putMap));
 			} else {
 				TranslateCount count = amount.get(pte.getHookedPlugin());
-				count.getAmount().replace(player.getLocale(), count.getAmount().get(player.getLocale()) + 1);
+				if (!amount.isEmpty() && count != null && count.getAmount() != null && count.getAmount().get(player.getLocale()) != null) 
+					count.getAmount().replace(player.getLocale(), count.getAmount().get(player.getLocale()) + 1);
 			}
 		} else {
 			String language = pte.getHookedPlugin().getFallback().getName().replace(".yml", "");
+			if (language == null) return;
+			
 			if (!amount.containsKey(pte.getHookedPlugin())) {
 				Map<String, Integer> putMap = new HashMap<>();
 				putMap.put(language, 1);
 				amount.put(pte.getHookedPlugin(), new TranslateCount(putMap));
 			} else {
 				TranslateCount count = amount.get(pte.getHookedPlugin());
-				count.getAmount().replace(language, count.getAmount().get(language) + 1);
+				if (!amount.isEmpty() && count != null && count.getAmount() != null && count.getAmount().get(language) != null) 
+					count.getAmount().replace(language, count.getAmount().get(language) + 1);
 			}
 		}
 	}
