@@ -1,19 +1,19 @@
 package net.islandearth.languagy.api.event;
 
+import net.islandearth.languagy.api.HookedPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import net.islandearth.languagy.api.HookedPlugin;
-
-public class PlayerTranslateEvent extends Event {
+public class AsyncPlayerTranslateEvent extends Event {
 	
 	private Player player;
 	private String path;
 	private Object translation;
 	private HookedPlugin plugin;
 	
-	public PlayerTranslateEvent(Player player, String path, Object translation, HookedPlugin plugin) {
+	public AsyncPlayerTranslateEvent(Player player, String path, Object translation, HookedPlugin plugin) {
+		super(true);
 		this.player = player;
 		this.path = path;
 		this.translation = translation;

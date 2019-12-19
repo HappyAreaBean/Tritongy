@@ -36,6 +36,7 @@ public class VersionChecker {
 	}
 
 	public enum Version {
+		v1_15_R1("1.15"),
 		v1_14_R1("1.14"),
 		v1_13_R2("1.13.2"),
 		v1_13_R1("1.13.1"),

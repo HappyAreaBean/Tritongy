@@ -2,7 +2,7 @@ package net.islandearth.languagy.language;
 
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.api.event.PlayerTranslateEvent;
+import net.islandearth.languagy.api.event.AsyncPlayerTranslateEvent;
 import net.islandearth.languagy.api.event.PluginHookEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -106,12 +106,12 @@ public class Translator {
 				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist in target locale! Try regenerating language files?");
 				FileConfiguration fallbackConfig = YamlConfiguration.loadConfiguration(fallback);
 				String translation = ChatColor.translateAlternateColorCodes('&', fallbackConfig.getString(path));
-				Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, translation, hook));
+				Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 				return translation;
 			}
 			
 			String translation = ChatColor.translateAlternateColorCodes('&', config.getString(path));
-			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, translation, hook));
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 			return translation;
 		} else {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
@@ -121,7 +121,7 @@ public class Translator {
 			}
 			
 			String translation = ChatColor.translateAlternateColorCodes('&', config.getString(path));
-			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, translation, hook));
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 			return translation;
 		}
 	}
@@ -150,7 +150,7 @@ public class Translator {
 				vals.add(ChatColor.translateAlternateColorCodes('&', string));
 			}
 			
-			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, vals, hook));
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
 			return vals;
 		} else {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
@@ -162,9 +162,9 @@ public class Translator {
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
 				vals.add(ChatColor.translateAlternateColorCodes('&', string));
-			} 
-			
-			Bukkit.getPluginManager().callEvent(new PlayerTranslateEvent(target, path, vals, hook));
+			}
+
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
 			return vals;
 		}
 	}

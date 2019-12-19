@@ -2,7 +2,7 @@ package net.islandearth.languagy.listener;
 
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.api.event.PlayerTranslateEvent;
+import net.islandearth.languagy.api.event.AsyncPlayerTranslateEvent;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +18,7 @@ public class TranslateListener implements Listener, Runnable {
 	private Map<HookedPlugin, TranslateCount> amount = new HashMap<>();
 	
 	@EventHandler
-	public void onTranslate(PlayerTranslateEvent pte) {
+	public void onTranslate(AsyncPlayerTranslateEvent pte) {
 		Player player = pte.getPlayer();
 		if (player.getLocale() == null || amount == null) return;
 		
