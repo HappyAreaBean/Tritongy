@@ -9,5 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface LanguagyImplementation {
 
-	public String fallbackFile();
+	Language value();
+
+	String defaultFolder() default "lang";
 }

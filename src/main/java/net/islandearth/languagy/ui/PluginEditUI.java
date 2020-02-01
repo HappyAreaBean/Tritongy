@@ -1,20 +1,17 @@
 package net.islandearth.languagy.ui;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
+import net.islandearth.languagy.api.HookedPlugin;
+import net.islandearth.languagy.language.Language;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.language.Language;
-import net.islandearth.languagy.language.LanguageParser;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PluginEditUI extends UI {
 
@@ -30,7 +27,7 @@ public class PluginEditUI extends UI {
 				if (file.isFile()) {
 					ItemStack lang = new ItemStack(Material.WRITABLE_BOOK);
 					ItemMeta lm = lang.getItemMeta();
-					Language language = LanguageParser.getFromCode(file.getName().replace(".yml", ""));
+					Language language = Language.getFromCode(file.getName().replace(".yml", ""));
 					if (language != null) {
 						lm.setDisplayName(ChatColor.WHITE + StringUtils.capitalize(language.toString().toLowerCase()));
 						lang.setItemMeta(lm);

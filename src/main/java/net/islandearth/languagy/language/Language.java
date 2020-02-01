@@ -102,4 +102,17 @@ public enum Language {
 	public String getCode() {
 		return code;
 	}
+
+	/**
+	 *
+	 * @param code - the language code, e.g "en_gb"
+	 * @return The language. If the language does
+	 * not exist within the enum, ENGLISH
+	 * is returned as the fallback default.
+	 */
+	public static Language getFromCode(String code) {
+		for (Language language : values()) {
+			if (language.getCode().equals(code)) return language;
+		} return Language.ENGLISH;
+	}
 }

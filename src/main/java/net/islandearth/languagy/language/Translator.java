@@ -16,34 +16,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Translator {
 
 	private Plugin plugin;
-
 	private File fallback;
-
-	private TranslatorOptions options;
-
+	private final TranslatorOptions options;
 	private boolean debug;
+	private HookedPlugin hook;
+	private final Language language;
 	
-	protected HookedPlugin hook;
-	
-	/**
-	 * @deprecated
-	 * @see #Translator(Plugin, File)
-	 */
-	@Deprecated
-	public Translator(@NotNull JavaPlugin plugin, @NotNull File fallback) {
-		plugin.getLogger().warning("[Languagy] Plugin is using deprecated translator constructor! Please nag the author(s), " + plugin.getDescription().getAuthors() + ", about this!");
-		plugin.getLogger().warning("[Languagy] The author should be using the new LanguagyImplementation annotation.");
-		setup(plugin, fallback);
-	}
-	
-	public Translator(@NotNull Plugin plugin, File fallback) {
+	public Translator(@NotNull Plugin plugin, File fallback, Language language) {
 		this.options = new TranslatorOptions(this);
+		this.language = language;
 		setup(plugin, fallback);
 	}
 	
@@ -101,10 +87,10 @@ public class Translator {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
 		if (file.exists()) {
-			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
 			if (config.getString(path) == null) {
 				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist in target locale! Try regenerating language files?");
-				FileConfiguration fallbackConfig = YamlConfiguration.loadConfiguration(fallback);
+				FileConfiguration fallbackConfig = hook.getCachedLanguages().get(language);
 				String translation = ChatColor.translateAlternateColorCodes('&', fallbackConfig.getString(path));
 				Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 				return translation;
@@ -114,7 +100,7 @@ public class Translator {
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 			return translation;
 		} else {
-			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
+			FileConfiguration config = hook.getCachedLanguages().get(language);
 			if (config.getString(path) == null) {
 				plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist anywhere! Try regenerating language files?");
 				return "";
@@ -139,11 +125,7 @@ public class Translator {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
 		if (file.exists()) {
-			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-			if (config.getStringList(path) == null) {
-				plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist! Try regenerating language files?");
-				return Arrays.asList();
-			}
+			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
 			
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
@@ -153,11 +135,7 @@ public class Translator {
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
 			return vals;
 		} else {
-			FileConfiguration config = YamlConfiguration.loadConfiguration(fallback);
-			if (config.getStringList(path) == null) {
-				plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist! Try regenerating language files?");
-				return Arrays.asList();
-			}
+			FileConfiguration config = hook.getCachedLanguages().get(language);
 			
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
@@ -177,7 +155,7 @@ public class Translator {
 	public FileConfiguration getFileConfiguration(@NotNull Player target) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + "/" + target.getLocale() + ".yml");
-		return YamlConfiguration.loadConfiguration(file);
+		return hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
 	}
 	
 	private void setup(Plugin plugin, File fallback) {
@@ -207,13 +185,14 @@ public class Translator {
 		this.hook = new HookedPlugin(plugin, Material.DIRT, lang, fallback);
 		if (LanguagyPlugin.getPlugin() != null) LanguagyPlugin.getPlugin().getHookedPlugins().add(hook);
 		Bukkit.getPluginManager().callEvent(new PluginHookEvent(hook));
-		System.out.println(lang.toString());
+		if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().info(lang.toString());
 		for (Language language : Language.values()) {
 			File file = new File(lang.toString() + "/" + language.getCode() + ".yml");
 			if (!file.exists() || !file.getName().contains(language.getCode())) {
 				String reason = !file.exists() ? "Does not exist" : "File name is incorrect";
 				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().warning("[Languagy] Language file could not be loaded: " + file.getName() + ". Reason: " + reason);
 			} else {
+				hook.addCachedLanguage(language, YamlConfiguration.loadConfiguration(file));
 				if (plugin.getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Loaded language '" + language.getCode() + "'.");
 			}
 		}

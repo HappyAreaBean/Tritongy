@@ -14,6 +14,7 @@ import net.islandearth.languagy.language.Translator;
 import net.islandearth.languagy.listener.InventoryListener;
 import net.islandearth.languagy.listener.JoinListener;
 import net.islandearth.languagy.listener.TranslateListener;
+import net.islandearth.languagy.tasks.CacheReloadTask;
 import net.islandearth.languagy.version.VersionChecker;
 import net.islandearth.languagy.version.VersionChecker.Version;
 import org.apache.commons.lang.StringUtils;
@@ -40,7 +41,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	
 	private Logger log = Bukkit.getLogger();
 	
-	@LanguagyImplementation(fallbackFile = "plugins/Languagy/lang/en_gb.yml")
+	@LanguagyImplementation(Language.ENGLISH)
 	private Translator translateTester;
 	
 	private List<HookedPlugin> hookedPlugins;
@@ -52,7 +53,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	
 	@Override
 	public void onEnable() {
-		log.info("Loading...");
 		this.version = new VersionChecker();
 		List<String> supported = new ArrayList<>();
 		for (Version version : Version.values()) {
@@ -77,9 +77,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		
 		try {
 			if (Bukkit.getPluginManager().getPlugin("Plan") != null) this.extensionManager = new ExtensionManager(this);
-		} catch (Exception e) {
-			
-		}
+		} catch (Exception ignored) { }
 		
 		LanguagyPlugin.plugin = this;
 		if (hookedPlugins == null) this.hookedPlugins = new ArrayList<>();
@@ -88,6 +86,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		if (!getConfig().getBoolean("Debug")) this.getLogger().warning("Running on silent mode. Enable debug to toggle.");
 		registerCommands();
 		registerListeners();
+		startTasks();
 		startMetrics();
 		PaperLib.suggestPaper(this);
 	}
@@ -117,11 +116,11 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		
 		try {
 			File file = new File(getDataFolder() + "/lang/");
-			if (!file.exists()) file.mkdir();
+			file.mkdir();
 			File lang = new File(getDataFolder() + "/lang/en_gb.yml");
-			if (!lang.exists()) lang.createNewFile();
+			lang.createNewFile();
 			File lang2 = new File(getDataFolder() + "/lang/nl_nl.yml");
-			if (!lang2.exists()) lang2.createNewFile();
+			lang2.createNewFile();
 			
 			FileConfiguration config = YamlConfiguration.loadConfiguration(lang);
 			config.options().copyDefaults(true);
@@ -155,6 +154,10 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 			pm.registerEvents(tl, this);
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, tl, 20L, 1000L);
 		}
+	}
+
+	private void startTasks() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new CacheReloadTask(this), 20L, 6000);
 	}
 	
 	private void startMetrics() {
@@ -217,7 +220,12 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 						if (getConfig().getBoolean("Debug")) plugin.getLogger().info("[Languagy] Found annotation " + implementation.toString() + " on field " + field.getName() + ".");
 						field.setAccessible(true);
 						try {
-							field.set(plugin, new Translator(plugin, new File(implementation.fallbackFile())));
+							field.set(plugin, new Translator(plugin, new File(plugin.getDataFolder()
+									+ "/"
+									+ implementation.defaultFolder()
+									+ "/"
+									+ implementation.value()),
+									implementation.value()));
 							LanguagyPluginHook lph = (LanguagyPluginHook) plugin;
 							lph.onLanguagyHook();
 							break;
@@ -235,8 +243,10 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 
 	@Override
 	public void onLanguagyHook() {
-		this.translateTester.setDebug(this.getConfig().getBoolean("Debug"));
-		this.getLogger().info("--- TESTING DOWNLOADER ---");
-		this.translateTester.getOptions().externalDirectory("https://www.islandearth.net/plugins/languagy/lang/");
+		if (this.getConfig().getBoolean("Debug")) {
+			this.translateTester.setDebug(this.getConfig().getBoolean("Debug"));
+			this.getLogger().info("--- TESTING DOWNLOADER ---");
+			this.translateTester.getOptions().externalDirectory("https://www.islandearth.net/plugins/languagy/lang/");
+		}
 	}
 }
