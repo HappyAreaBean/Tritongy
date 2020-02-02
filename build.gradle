@@ -3,8 +3,6 @@ plugins {
     id 'java'
 }
 
-apply plugin: 'java'
-
 group = pluginGroup
 version = pluginVersion
 
@@ -44,13 +42,14 @@ javadoc {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compileOnly 'org.spigotmc:spigot:1.13.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
     implementation 'commons-codec:commons-codec:1.13'
     implementation 'commons-io:commons-io:2.6'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'io.papermc:paperlib:1.0.2'
     implementation 'org.bstats:bstats-bukkit:1.5'
     implementation 'com.github.WesJD:AnvilGUI:master-SNAPSHOT'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
     compileOnly 'be.maximvdw:spigotsite-api:0.3.2-SNAPSHOT'
     compileOnly 'com.djrapitops:Plan-api:5.0-R0.3'
 }
