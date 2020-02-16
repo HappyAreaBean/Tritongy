@@ -153,8 +153,6 @@ public class Translator {
 	 * @return configuration for player's language
 	 */
 	public FileConfiguration getFileConfiguration(@NotNull Player target) {
-		String lang = fallback.getAbsoluteFile().getParentFile().toString();
-		File file = new File(lang + "/" + target.getLocale() + ".yml");
 		return hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
 	}
 	

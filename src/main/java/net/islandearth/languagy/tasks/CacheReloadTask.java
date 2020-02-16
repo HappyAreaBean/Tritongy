@@ -20,7 +20,7 @@ public class CacheReloadTask implements Runnable {
 			hook.getCachedLanguages().forEach((language, fileConfiguration) -> {
 				File lang = hook.getFallback().getAbsoluteFile().getParentFile();
 				File file = new File(lang.toString() + "/" + language.getCode() + ".yml");
-				hook.getCachedLanguages().put(language, YamlConfiguration.loadConfiguration(file));
+				hook.addCachedLanguage(language, YamlConfiguration.loadConfiguration(file));
 			});
 		}
 	}

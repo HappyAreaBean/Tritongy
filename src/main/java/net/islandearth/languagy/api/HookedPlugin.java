@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HookedPlugin {
 
@@ -15,7 +16,7 @@ public class HookedPlugin {
 	private Material display;
 	private final File fallbackFolder;
 	private final File fallback;
-	private Map<Language, FileConfiguration> cachedLanguages;
+	private Map<Language, FileConfiguration> cachedLanguages = new ConcurrentHashMap<Language, FileConfiguration>();
 
 	public HookedPlugin(Plugin plugin, Material display, File fallbackFolder, File fallback) {
 		this.plugin = plugin;

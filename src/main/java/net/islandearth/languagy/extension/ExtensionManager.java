@@ -11,7 +11,8 @@ public class ExtensionManager {
 
 	private Map<String, AbstractExtension> extensions = new HashMap<>();
 	
-	private LanguagyPlugin plugin;
+	@SuppressWarnings("unused")
+    private LanguagyPlugin plugin;
 	
 	public ExtensionManager(LanguagyPlugin plugin) {
 		this.plugin = plugin;
