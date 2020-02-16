@@ -1,9 +1,7 @@
 plugins {
-	id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
     id 'java'
 }
-
-apply plugin: 'java'
 
 group = pluginGroup
 version = pluginVersion
@@ -16,7 +14,7 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
-    maven { url= 'https://repo.codemc.org/repository/maven-public' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/groups/public/' }
     maven { url = 'https://jitpack.io' }
     maven { url = 'https://dl.bintray.com/rsl1122/Plan-repository' }
     maven {
@@ -30,38 +28,39 @@ repositories {
     }
     
     maven {
-    	name = 'maxim'
-    	url = 'http://repo.mvdw-software.com/content/groups/public/'
+        name = 'maxim'
+        url = 'http://repo.mvdw-software.com/content/groups/public/'
     }
 }
 
 javadoc {
-	exclude 'net/islandearth/languagy/ui/**'
-	exclude 'net/islandearth/languagy/update/**'
-	exclude 'net/islandearth/languagy/commands/**'
-	exclude 'net/islandearth/languagy/listener/**'
+    exclude 'net/islandearth/languagy/ui/**'
+    exclude 'net/islandearth/languagy/update/**'
+    exclude 'net/islandearth/languagy/commands/**'
+    exclude 'net/islandearth/languagy/listener/**'
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compileOnly 'org.spigotmc:spigot:1.13.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
     implementation 'commons-codec:commons-codec:1.13'
     implementation 'commons-io:commons-io:2.6'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'io.papermc:paperlib:1.0.2'
     implementation 'org.bstats:bstats-bukkit:1.5'
     implementation 'com.github.WesJD:AnvilGUI:master-SNAPSHOT'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
     compileOnly 'be.maximvdw:spigotsite-api:0.3.2-SNAPSHOT'
     compileOnly 'com.djrapitops:Plan-api:5.0-R0.3'
 }
 
 shadowJar {
-	relocate 'net.wesjd.anvilgui', 'net.islandearth.languagy.anvilgui'
-   	relocate 'org.apache.commons.codec', 'net.islandearth.languagy.commons.codec'
-   	relocate 'org.apache.commons.io', 'net.islandearth.languagy.commons.io'
-   	relocate 'co.aikar.commands', 'net.islandearth.languagy.acf'
-   	relocate 'io.papermc.lib', 'net.islandearth.languagy.paperlib'
-   	relocate 'org.bstats', 'net.islandearth.languagy.metrics'
+    relocate 'net.wesjd.anvilgui', 'net.islandearth.languagy.anvilgui'
+    relocate 'org.apache.commons.codec', 'net.islandearth.languagy.commons.codec'
+    relocate 'org.apache.commons.io', 'net.islandearth.languagy.commons.io'
+    relocate 'co.aikar.commands', 'net.islandearth.languagy.acf'
+    relocate 'io.papermc.lib', 'net.islandearth.languagy.paperlib'
+    relocate 'org.bstats', 'net.islandearth.languagy.metrics'
 }
 
 build.dependsOn shadowJar
