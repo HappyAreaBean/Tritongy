@@ -224,7 +224,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 									+ "/"
 									+ implementation.defaultFolder()
 									+ "/"
-									+ implementation.value()),
+									+ implementation.value().getCode() + ".yml"),
 									implementation.value()));
 							LanguagyPluginHook lph = (LanguagyPluginHook) plugin;
 							lph.onLanguagyHook();
