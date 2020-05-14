@@ -47,7 +47,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'io.papermc:paperlib:1.0.2'
-    implementation 'org.bstats:bstats-bukkit:1.5'
+    implementation 'org.bstats:bstats-bukkit:1.7'
     implementation 'com.github.WesJD:AnvilGUI:master-SNAPSHOT'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     compileOnly 'be.maximvdw:spigotsite-api:0.3.2-SNAPSHOT'

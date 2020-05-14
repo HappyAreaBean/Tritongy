@@ -164,7 +164,7 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		if (getConfig().getBoolean("Stats")) {
 			this.getLogger().info("[Languagy] Starting metrics! Thanks :)");
 			@SuppressWarnings("unused")
-			Metrics metrics = new Metrics(this);
+			Metrics metrics = new Metrics(this, 3353);
 			/*Map<String, int[]> languages = new HashMap<>();
 			for(Language language : Language.values())
 			{
