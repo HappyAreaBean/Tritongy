@@ -1,9 +1,5 @@
 package net.islandearth.languagy.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
@@ -12,6 +8,9 @@ import co.aikar.commands.annotation.Subcommand;
 import net.islandearth.languagy.LanguagyPlugin;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.ui.EditUI;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @CommandAlias("lgy")
 public class LanguagyCommand extends BaseCommand {
@@ -23,10 +22,10 @@ public class LanguagyCommand extends BaseCommand {
 	}
 
 	@Default
-	public void onCommand(CommandSender sender, String[] args) {
+	public void onCommand(CommandSender sender) {
 		sender.sendMessage(ChatColor.WHITE + "Languagy is a Spigot API for providing player-individual languages for plugins.");
 		sender.sendMessage(ChatColor.YELLOW + "https://www.spigotmc.org/resources/languagy-1-8-1-14.61663/");
-		sender.sendMessage(ChatColor.YELLOW + "Copright 2019 IslandEarth. All rights reserved.");
+		sender.sendMessage(ChatColor.YELLOW + "Copyright 2020 IslandEarth. All rights reserved.");
 	}
 	
 	@Subcommand("test")

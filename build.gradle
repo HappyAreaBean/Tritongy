@@ -50,8 +50,7 @@ dependencies {
     implementation 'org.bstats:bstats-bukkit:1.7'
     implementation 'com.github.WesJD:AnvilGUI:master-SNAPSHOT'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    compileOnly 'be.maximvdw:spigotsite-api:0.3.2-SNAPSHOT'
-    compileOnly 'com.djrapitops:Plan-api:5.0-R0.3'
+    compileOnly 'com.djrapitops:Plan-api:5.1-R0.4'
 }
 
 shadowJar {

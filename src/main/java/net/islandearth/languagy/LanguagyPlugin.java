@@ -12,15 +12,10 @@ import net.islandearth.languagy.language.LanguagyImplementation;
 import net.islandearth.languagy.language.LanguagyPluginHook;
 import net.islandearth.languagy.language.Translator;
 import net.islandearth.languagy.listener.InventoryListener;
-import net.islandearth.languagy.listener.JoinListener;
 import net.islandearth.languagy.listener.TranslateListener;
 import net.islandearth.languagy.tasks.CacheReloadTask;
-import net.islandearth.languagy.version.VersionChecker;
-import net.islandearth.languagy.version.VersionChecker.Version;
-import org.apache.commons.lang.StringUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -47,33 +42,11 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	private List<HookedPlugin> hookedPlugins;
 
 	private static LanguagyPlugin plugin;
-
-	private VersionChecker version;
+	
 	private ExtensionManager extensionManager;
 	
 	@Override
 	public void onEnable() {
-		this.version = new VersionChecker();
-		List<String> supported = new ArrayList<>();
-		for (Version version : Version.values()) {
-			if (version != Version.UNSUPPORTED) {
-				supported.add(version.getId());
-			}
-		}
-		
-		if (!version.checkVersion()) {
-			log.info(" ");
-			log.info(ChatColor.RED + "You are using an unsupported version!");
-			log.info(ChatColor.RED + "Your current version is: " + version.getCurrentVersion().getId());
-			log.info(ChatColor.RED + "The latest version is: " + version.getLatestVersion().getId());
-			log.info(ChatColor.GREEN + "This plugin supports: " + StringUtils.join(supported, ','));
-			log.info(" ");
-		} else {
-			log.info(" ");
-			log.info(ChatColor.GREEN + "You are running version " + version.getCurrentVersion().getId() + ".");
-			log.info(" ");
-		}
-		
 		
 		try {
 			if (Bukkit.getPluginManager().getPlugin("Plan") != null) this.extensionManager = new ExtensionManager(this);
@@ -95,7 +68,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	public void onDisable() {
 		log.info("Disabling...");
 		LanguagyPlugin.plugin = null;
-		this.version = null;
 		this.translateTester = null;
 	}
 	
@@ -148,7 +120,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(this, this);
 		pm.registerEvents(new InventoryListener(), this);
-		pm.registerEvents(new JoinListener(this), this);
 		if (Bukkit.getPluginManager().getPlugin("Plan") != null) {
 			TranslateListener tl = new TranslateListener();
 			pm.registerEvents(tl, this);
@@ -188,11 +159,6 @@ public class LanguagyPlugin extends JavaPlugin implements Languagy, Listener, La
 	@Override
 	public List<HookedPlugin> getHookedPlugins() {
 		return hookedPlugins;
-	}
-
-	@Override
-	public VersionChecker getVersion() {
-		return version;
 	}
 
 	@Override

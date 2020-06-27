@@ -1,15 +1,14 @@
 package net.islandearth.languagy.listener;
 
-import java.util.UUID;
-
+import net.islandearth.languagy.ui.UI;
+import net.islandearth.languagy.ui.UI.ItemClick;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-import net.islandearth.languagy.ui.UI;
-import net.islandearth.languagy.ui.UI.ItemClick;
+import java.util.UUID;
 
 public class InventoryListener implements Listener {
 	
@@ -36,7 +35,7 @@ public class InventoryListener implements Listener {
 			Player player = (Player) ice.getPlayer();
 			UI ui = UI.getInventories().get(UI.getOpen().get(player.getUniqueId()));
 			if (ui != null) ui.delete();
-			if (UI.getOpen().containsKey(player.getUniqueId())) UI.getOpen().remove(player.getUniqueId());
+			UI.getOpen().remove(player.getUniqueId());
 			player.updateInventory();
 		}
 	}
