@@ -79,7 +79,7 @@ public class Translator {
 	 */
 	public String getTranslationFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
-		File file = new File(lang + "/" + target.getLocale() + ".yml");
+		File file = new File(lang + File.separator + target.getLocale() + ".yml");
 		if (file.exists()) {
 			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
 			if (config.getString(path) == null) {
@@ -117,7 +117,7 @@ public class Translator {
 	 */
 	public List<String> getTranslationListFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
-		File file = new File(lang + "/" + target.getLocale() + ".yml");
+		File file = new File(lang + File.separator + target.getLocale() + ".yml");
 		if (file.exists()) {
 			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
 			
@@ -151,7 +151,6 @@ public class Translator {
 	}
 	
 	private void setup(Plugin plugin, File fallback) {
-		
 		if (!fallback.exists()) {
 			plugin.getLogger().warning("[Languagy] Could not initiate new translator: Fallback does not exist!");
 			return;
@@ -180,7 +179,7 @@ public class Translator {
 
 		if (hook.isDebug()) plugin.getLogger().info(lang.toString());
 		for (Language language : Language.values()) {
-			File file = new File(lang.toString() + "/" + language.getCode() + ".yml");
+			File file = new File(lang.toString() + File.separator + language.getCode() + ".yml");
 			if (!file.exists() || !file.getName().contains(language.getCode())) {
 				String reason = !file.exists() ? "Does not exist" : "File name is incorrect";
 				if (hook.isDebug()) plugin.getLogger().warning("[Languagy] Language file could not be loaded: " + file.getName() + ". Reason: " + reason);

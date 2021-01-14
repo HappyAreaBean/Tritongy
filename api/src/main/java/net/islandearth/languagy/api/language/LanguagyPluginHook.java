@@ -37,9 +37,9 @@ public interface LanguagyPluginHook {
 						field.setAccessible(true);
 						try {
 							Translator translator = new Translator(plugin, new File(plugin.getDataFolder()
-									+ "/"
+									+ File.separator
 									+ implementation.defaultFolder()
-									+ "/"
+									+ File.separator
 									+ implementation.value().getCode() + ".yml"),
 									implementation.value());
 							field.set(plugin, translator);

@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -35,7 +34,7 @@ public class TranslatorOptions {
 			int current = 1;
 			for (Language language : Language.values()) {
 				String lang = translator.getFallback().getAbsoluteFile().getParentFile().toString();
-				File file = new File(lang + "/" + language.getCode() + ".yml");
+				File file = new File(lang + File.separator + language.getCode() + ".yml");
 				String newURL = url;
 				if (!newURL.endsWith("/")) newURL = url + "/";
 				
@@ -49,7 +48,7 @@ public class TranslatorOptions {
 							}
 						}
 					}
-					
+
 					try {
 						FileUtils.copyURLToFile(download, file);
 						translator.getPlugin().getLogger().warning("[ASync] [Languagy] Changes detected @ " + language.getCode() + ", replacing file! [" + current + "/" + Language.values().length + "]");
@@ -84,24 +83,21 @@ public class TranslatorOptions {
 	 * @param language {@link Language} being provided
 	 * @param url url to download from
 	 */
-	public void externalFile(Language language, String url) throws IllegalArgumentException {
+	public void externalFile(Language language, String url) {
 		Bukkit.getScheduler().runTaskAsynchronously(translator.getPlugin(), () -> {
 			translator.getPlugin().getLogger().info("[Languagy] ---------------------------------------------");
 			translator.getPlugin().getLogger().info("[Languagy] PLUGIN: " + translator.getPlugin().getName());
 			translator.getPlugin().getLogger().info("[Languagy] Preparing to download provided language files from " + url + ".");
 			String lang = translator.getFallback().getAbsoluteFile().getParentFile().toString();
-			File file = new File(lang + "/" + language.getCode() + ".yml");
-			String newURL = url;
-			if (!newURL.endsWith("/")) newURL = url + "/";
+			File file = new File(lang + File.separator + language.getCode() + ".yml");
 			
 			try {
 				URL download = new URL(url + language.getCode() + ".yml");
 				if (file.exists()) {
 					FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-					if (getSha1(download) != null) {
-						if (getSha1(download).equals(config.getString("lasthash"))) {
-							return;
-						}
+					if (getSha1(download) != null
+					&& getSha1(download).equals(config.getString("lasthash"))) {
+						return;
 					}
 				}
 				
@@ -130,28 +126,13 @@ public class TranslatorOptions {
 		});
 	}
 	
-	@SuppressWarnings("unused")
-	private String getSha1(File file) throws Exception {
-		try {
-			byte[] result = DigestUtils.sha1(new FileInputStream(file));
-			StringBuffer sb = new StringBuffer();
-		    for (int i = 0; i < result.length; i++) {
-		    	sb.append(String.format("%02x", result[i]));
-		    }
-			return sb.toString();
-		} catch (IOException e) {
-			// Ignore - file doesn't exist
-		}
-		return null;
-	}
-	
 	private String getSha1(URL url) {
 		try {
 			byte[] result = DigestUtils.sha1(url.openStream());
-			StringBuffer sb = new StringBuffer();
-		    for (int i = 0; i < result.length; i++) {
-		    	sb.append(String.format("%02x", result[i]));
-		    }
+			StringBuilder sb = new StringBuilder();
+			for (byte b : result) {
+				sb.append(String.format("%02x", b));
+			}
 			return sb.toString();
 		} catch (IOException e) {
 			// Ignore - file doesn't exist

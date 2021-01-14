@@ -16,7 +16,7 @@ public class HookedPlugin {
 	private Material display;
 	private final File fallbackFolder;
 	private final File fallback;
-	private Map<Language, FileConfiguration> cachedLanguages = new ConcurrentHashMap<Language, FileConfiguration>();
+	private Map<Language, FileConfiguration> cachedLanguages = new ConcurrentHashMap<>();
 	private boolean debug;
 
 	public HookedPlugin(Plugin plugin, Material display, File fallbackFolder, File fallback) {
