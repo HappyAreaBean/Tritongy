@@ -77,6 +77,7 @@ public class Translator {
 	 * If your plugin does not support their language,
 	 * your fallback file will be used.
 	 */
+	@NotNull
 	public String getTranslationFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + File.separator + target.getLocale() + ".yml");
@@ -85,12 +86,17 @@ public class Translator {
 			if (config.getString(path) == null) {
 				if (hook.isDebug()) plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist in target locale! Try regenerating language files?");
 				FileConfiguration fallbackConfig = hook.getCachedLanguages().get(language);
-				String translation = ChatColor.translateAlternateColorCodes('&', fallbackConfig.getString(path));
+				String value = fallbackConfig.getString(path);
+				if (value == null) {
+					if (hook.isDebug()) plugin.getLogger().warning("[Languagy] Unable to locate translation anywhere.");
+					return "";
+				}
+				String translation = translate(value);
 				Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 				return translation;
 			}
 			
-			String translation = ChatColor.translateAlternateColorCodes('&', config.getString(path));
+			String translation = translate(config.getString(path));
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 			return translation;
 		} else {
@@ -100,7 +106,7 @@ public class Translator {
 				return "";
 			}
 			
-			String translation = ChatColor.translateAlternateColorCodes('&', config.getString(path));
+			String translation = translate(config.getString(path));
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
 			return translation;
 		}
@@ -115,6 +121,7 @@ public class Translator {
 	 * If your plugin does not support their language,
 	 * your fallback file will be used.
 	 */
+	@NotNull
 	public List<String> getTranslationListFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + File.separator + target.getLocale() + ".yml");
@@ -123,7 +130,7 @@ public class Translator {
 			
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
-				vals.add(ChatColor.translateAlternateColorCodes('&', string));
+				vals.add(translate(string));
 			}
 			
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
@@ -133,7 +140,7 @@ public class Translator {
 			
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
-				vals.add(ChatColor.translateAlternateColorCodes('&', string));
+				vals.add(translate(string));
 			}
 
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
@@ -142,10 +149,11 @@ public class Translator {
 	}
 	
 	/**
-	 * 
+	 * Gets the language config for the specified player.
 	 * @param target Player
 	 * @return configuration for player's language
 	 */
+	@Nullable
 	public FileConfiguration getFileConfiguration(@NotNull Player target) {
 		return hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
 	}
@@ -190,10 +198,12 @@ public class Translator {
 		}
 	}
 
+	@NotNull
 	public File getFallback() {
 		return fallback;
 	}
 
+	@NotNull
 	public TranslatorOptions getOptions() {
 		return options;
 	}
@@ -208,5 +218,10 @@ public class Translator {
 
 	public Plugin getPlugin() {
 		return plugin;
+	}
+
+
+	private String translate(String message) {
+		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 }
