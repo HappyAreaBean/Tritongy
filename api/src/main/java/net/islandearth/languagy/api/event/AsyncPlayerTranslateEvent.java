@@ -1,6 +1,7 @@
 package net.islandearth.languagy.api.event;
 
 import net.islandearth.languagy.api.HookedPlugin;
+import net.islandearth.languagy.api.language.translation.Translation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -8,14 +9,12 @@ import org.bukkit.event.HandlerList;
 public class AsyncPlayerTranslateEvent extends Event {
 	
 	private final Player player;
-	private final String path;
-	private final Object translation;
+	private final Translation translation;
 	private final HookedPlugin plugin;
 	
-	public AsyncPlayerTranslateEvent(Player player, String path, Object translation, HookedPlugin plugin) {
+	public AsyncPlayerTranslateEvent(Player player, Translation translation, HookedPlugin plugin) {
 		super(true);
 		this.player = player;
-		this.path = path;
 		this.translation = translation;
 		this.plugin = plugin;
 	}
@@ -34,15 +33,11 @@ public class AsyncPlayerTranslateEvent extends Event {
 		return player;
 	}
 	
-	public String getPath() {
-		return path;
-	}
-	
 	/**
-	 * 
-	 * @return translated message, can either be a list or string
+	 * Gets the translation.
+	 * @return the translation
 	 */
-	public Object getTranslation() {
+	public Translation getTranslation() {
 		return translation;
 	}
 	

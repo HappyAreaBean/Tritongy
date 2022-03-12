@@ -16,7 +16,15 @@ dependencies {
 
 tasks {
     shadowJar {
-        relocate("org.apache.commons.codec", "net.islandearth.languagy.commons.codec")
-        relocate("org.apache.commons.io", "net.islandearth.languagy.commons.io")
+        archiveClassifier.set("")
+
+        relocate("org.apache.commons.codec", "net.islandearth.languagy.libs.commons.codec")
+        relocate("org.apache.commons.io", "net.islandearth.languagy.libs.commons.io")
+    }
+}
+
+configure<PublishingExtension> {
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
     }
 }

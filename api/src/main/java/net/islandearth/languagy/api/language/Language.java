@@ -1,6 +1,9 @@
 package net.islandearth.languagy.api.language;
 
+import net.islandearth.languagy.api.language.key.LanguageKey;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public enum Language {
 	ENGLISH("en_gb"),
@@ -105,27 +108,26 @@ public enum Language {
 	CHINESE_SIMPLIFIED("zh_cn"),
 	CHINESE_TRADITIONAL("zh_tw");
 
-	private final String code;
+	private final LanguageKey key;
 
-	Language(String code) {
-		this.code = code;
+	Language(String key) {
+		this.key = LanguageKey.of(key);
 	}
 
-	public String getCode() {
-		return code;
+	public LanguageKey getKey() {
+		return key;
 	}
 
 	/**
-	 * Gets a language from the specified code.
-	 * If the language does not exist within the enum, {@link Language#ENGLISH} is returned as the fallback default.
-	 * @param code the language code, such as "en_gb"
-	 * @return the language from the provided code
+	 * Gets a possible language from the specified code.
+	 * If the language does not exist within the enum, this will return an empty {@link Optional}.
+	 * @param key the language key, see {@link LanguageKey#of(String)}
+	 * @return an {@link Optional} with the language from the provided key, else an empty optional
 	 */
-	@NotNull
-	public static Language getFromCode(String code) {
+	public static Optional<Language> getFromKey(@NotNull LanguageKey key) {
 		for (Language language : values()) {
-			if (language.getCode().equals(code)) return language;
+			if (language.getKey().equals(key)) return Optional.of(language);
 		}
-		return Language.ENGLISH;
+		return Optional.empty();
 	}
 }

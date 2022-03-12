@@ -1,9 +1,6 @@
 package net.islandearth.languagy.api;
 
-import com.google.common.collect.ImmutableMap;
 import net.islandearth.languagy.api.language.Language;
-import org.apache.commons.codec.language.bm.Lang;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -15,14 +12,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HookedPlugin {
 
 	private final Plugin plugin;
-	private final File fallbackFolder;
+	private final File folder;
 	private final File fallback;
 	private final Map<Language, FileConfiguration> cachedLanguages = new ConcurrentHashMap<>();
 	private boolean debug;
 
-	public HookedPlugin(Plugin plugin, File fallbackFolder, File fallback) {
+	public HookedPlugin(Plugin plugin, File folder, File fallback) {
 		this.plugin = plugin;
-		this.fallbackFolder = fallbackFolder;
+		this.folder = folder;
 		this.fallback = fallback;
 	}
 
@@ -30,8 +27,8 @@ public class HookedPlugin {
 		return plugin;
 	}
 
-	public File getFallbackFolder() {
-		return fallbackFolder;
+	public File getFolder() {
+		return folder;
 	}
 
 	public File getFallback() {
