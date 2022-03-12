@@ -218,9 +218,9 @@ public class Translator {
     private String getLocale(final Player player) {
         try {
             return player.getLocale();
-        } catch (Exception e) {
+        } catch (NoSuchMethodError e) {
             try {
-                return (String) LEGACY_LOCALE_METHOD.invoke(player);
+                return (String) LEGACY_LOCALE_METHOD.invoke(player.spigot());
             } catch (ReflectiveOperationException ex) {
                 plugin.getLogger().log(Level.SEVERE, "[Languagy] Failed to invoke legacy support", ex);
             }
