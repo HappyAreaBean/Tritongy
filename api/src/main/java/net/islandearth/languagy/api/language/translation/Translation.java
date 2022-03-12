@@ -58,7 +58,9 @@ public class Translation {
      */
     public List<String> colour() {
         List<String> colouredText = Lists.newArrayList();
-        translations.forEach(translation -> colouredText.add(colour(translation)));
+        translations.forEach(translation -> {
+            if (!translation.isEmpty()) colouredText.add(colour(translation));
+        });
         return colouredText;
     }
 
