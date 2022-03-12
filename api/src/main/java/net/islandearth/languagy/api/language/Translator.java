@@ -1,11 +1,9 @@
 package net.islandearth.languagy.api.language;
 
 import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.api.LanguagyCache;
 import net.islandearth.languagy.api.event.AsyncPlayerTranslateEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -19,37 +17,20 @@ import java.util.List;
 
 public class Translator {
 
-	private Plugin plugin;
-	private File fallback;
+	private final Plugin plugin;
 	private final TranslatorOptions options;
+
+	private final Language defaultLanguage;
+
+	private File fallback;
 	private boolean debug;
 	private HookedPlugin hook;
-	private final Language language;
 	
-	public Translator(@NotNull Plugin plugin, File fallback, Language language) {
+	public Translator(@NotNull Plugin plugin, File fallback, Language defaultLanguage) {
+		this.plugin = plugin;
 		this.options = new TranslatorOptions(this);
-		this.language = language;
+		this.defaultLanguage = defaultLanguage;
 		setup(plugin, fallback);
-	}
-	
-	/**
-	 * Sets the display material in the editor UI.
-	 * @param material material to display
-	 * @return {@link Translator} instance
-	 */
-	public Translator setDisplay(@NotNull Material material) {
-		hook.setDisplay(material);
-		return this;
-	}
-	
-	/**
-	 * Sets the plugin to use, this is unsafe and should be used with caution
-	 * @param newPlugin new plugin to set
-	 * @return {@link Translator} instance
-	 */
-	public Translator setPlugin(Plugin newPlugin) {
-		this.plugin = newPlugin;
-		return this;
 	}
 	
 	/**
@@ -68,83 +49,57 @@ public class Translator {
 	}
 
 	/**
-	 * 
-	 * @param target Player
-	 * @param path Configuraton path
-	 * @return Translated message for player.
 	 * Colour codes are automatically translated.
 	 * If your plugin does not support their language,
 	 * your fallback file will be used.
+	 * @param target the target player
+	 * @param path configuration path
+	 * @return translated string, colour coded
 	 */
 	@NotNull
 	public String getTranslationFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + File.separator + target.spigot().getLocale() + ".yml");
-		if (file.exists()) {
-			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.spigot().getLocale()));
-			if (config.getString(path) == null) {
-				if (hook.isDebug()) plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist in target locale! Try regenerating language files?");
-				FileConfiguration fallbackConfig = hook.getCachedLanguages().get(language);
-				String value = fallbackConfig.getString(path);
-				if (value == null) {
-					if (hook.isDebug()) plugin.getLogger().warning("[Languagy] Unable to locate translation anywhere.");
-					return "";
-				}
-				String translation = translate(value);
-				Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
-				return translation;
+		final Language targetLanguage = Language.getFromCode(target.spigot().getLocale());
+		FileConfiguration config = file.exists()
+				? hook.getCachedLanguages().get(targetLanguage)
+				: hook.getCachedLanguages().get(defaultLanguage);
+		if (config.getString(path) == null) {
+			if (hook.isDebug()) {
+				String text = "[Languagy] Translation was requested, but path did not exist in '%s'! Try regenerating language files?";
+				plugin.getLogger().warning(String.format(text, file.exists() ? targetLanguage : defaultLanguage));
 			}
-			
-			String translation = translate(config.getString(path));
-			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
-			return translation;
-		} else {
-			FileConfiguration config = hook.getCachedLanguages().get(language);
-			if (config.getString(path) == null) {
-				plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist anywhere! Try regenerating language files?");
-				return "";
-			}
-			
-			String translation = translate(config.getString(path));
-			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
-			return translation;
+			return Translations.NOT_FOUND;
 		}
+
+		String translation = translate(config.getString(path));
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, translation, hook)));
+		return translation;
 	}
 	
 	/**
-	 * 
-	 * @param target Player
-	 * @param path Configuraton path (Must be a list)
-	 * @return Translated list for player.
+	 * Gets a translated list for the target player.
 	 * Colour codes are automatically translated.
 	 * If your plugin does not support their language,
 	 * your fallback file will be used.
+	 * @param target the target player
+	 * @param path configuration path (Must be a list)
+	 * @return translated list of strings, colour coded
 	 */
 	@NotNull
 	public List<String> getTranslationListFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
 		File file = new File(lang + File.separator + target.spigot().getLocale() + ".yml");
-		if (file.exists()) {
-			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.spigot().getLocale()));
-			
-			List<String> vals = new ArrayList<>();
-			for (String string : config.getStringList(path)) {
-				vals.add(translate(string));
-			}
-			
-			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
-			return vals;
-		} else {
-			FileConfiguration config = hook.getCachedLanguages().get(language);
-			
-			List<String> vals = new ArrayList<>();
-			for (String string : config.getStringList(path)) {
-				vals.add(translate(string));
-			}
-
-			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
-			return vals;
+		FileConfiguration config = file.exists()
+				? hook.getCachedLanguages().get(Language.getFromCode(target.spigot().getLocale()))
+				: hook.getCachedLanguages().get(defaultLanguage);
+		List<String> vals = new ArrayList<>();
+		for (String string : config.getStringList(path)) {
+			vals.add(translate(string));
 		}
+
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, path, vals, hook)));
+		return vals;
 	}
 	
 	/**
@@ -163,26 +118,9 @@ public class Translator {
 			return;
 		}
 
-		LanguagyCache cache = LanguagyCache.get();
-		if (cache == null) cache = new LanguagyCache();
-		HookedPlugin remove = null;
-		for (HookedPlugin hook : cache.getHookedPlugins()) {
-			if (hook.getPlugin().getName().equals(plugin.getName())) {
-				remove = hook;
-				break;
-			}
-		}
-
-		if (remove != null) {
-			cache.getHookedPlugins().remove(remove);
-		}
-		
-		this.plugin = plugin;
 		this.fallback = fallback;
 		File lang = fallback.getAbsoluteFile().getParentFile();
-		this.hook = new HookedPlugin(plugin, Material.DIRT, lang, fallback);
-		cache.getHookedPlugins().add(hook);
-		Bukkit.getPluginManager().callEvent(new PluginHookEvent(hook));
+		this.hook = new HookedPlugin(plugin, lang, fallback);
 
 		if (hook.isDebug()) plugin.getLogger().info(lang.toString());
 		for (Language language : Language.values()) {
@@ -190,10 +128,10 @@ public class Translator {
 			if (!file.exists() || !file.getName().contains(language.getCode())) {
 				String reason = !file.exists() ? "Does not exist" : "File name is incorrect";
 				if (hook.isDebug()) plugin.getLogger().warning("[Languagy] Language file could not be loaded: " + file.getName() + ". Reason: " + reason);
-			} else {
-				hook.addCachedLanguage(language, YamlConfiguration.loadConfiguration(file));
-				if (hook.isDebug()) plugin.getLogger().info("[Languagy] Loaded language '" + language.getCode() + "'.");
+				continue;
 			}
+			hook.addCachedLanguage(language, YamlConfiguration.loadConfiguration(file));
+			if (hook.isDebug()) plugin.getLogger().info("[Languagy] Loaded language '" + language.getCode() + "'.");
 		}
 	}
 
@@ -203,6 +141,7 @@ public class Translator {
 	}
 
 	@NotNull
+	@Deprecated
 	public TranslatorOptions getOptions() {
 		return options;
 	}

@@ -13,29 +13,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HookedPlugin {
 
 	private final Plugin plugin;
-	private Material display;
 	private final File fallbackFolder;
 	private final File fallback;
 	private Map<Language, FileConfiguration> cachedLanguages = new ConcurrentHashMap<>();
 	private boolean debug;
 
-	public HookedPlugin(Plugin plugin, Material display, File fallbackFolder, File fallback) {
+	public HookedPlugin(Plugin plugin, File fallbackFolder, File fallback) {
 		this.plugin = plugin;
-		this.display = display;
 		this.fallbackFolder = fallbackFolder;
 		this.fallback = fallback;
 	}
 
 	public Plugin getPlugin() {
 		return plugin;
-	}
-
-	public Material getDisplay() {
-		return display;
-	}
-
-	public void setDisplay(Material display) {
-		this.display = display;
 	}
 
 	public File getFallbackFolder() {
