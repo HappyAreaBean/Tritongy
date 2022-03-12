@@ -18,7 +18,6 @@ import java.util.List;
 public class Translator {
 
 	private final Plugin plugin;
-	private final TranslatorOptions options;
 
 	private final Language defaultLanguage;
 
@@ -28,7 +27,6 @@ public class Translator {
 	
 	public Translator(@NotNull Plugin plugin, File fallback, Language defaultLanguage) {
 		this.plugin = plugin;
-		this.options = new TranslatorOptions(this);
 		this.defaultLanguage = defaultLanguage;
 		setup(plugin, fallback);
 	}
@@ -138,12 +136,6 @@ public class Translator {
 	@NotNull
 	public File getFallback() {
 		return fallback;
-	}
-
-	@NotNull
-	@Deprecated
-	public TranslatorOptions getOptions() {
-		return options;
 	}
 
 	public boolean isDebug() {
