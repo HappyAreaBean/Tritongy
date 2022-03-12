@@ -36,7 +36,6 @@ public class LanguageWatchService {
         this.executorService = Executors.newScheduledThreadPool(1);
         final Runnable actualTask = () -> {
             try {
-                System.out.println("running: " + Thread.currentThread());
                 WatchKey key = watchService.take();
                 for (WatchEvent<?> event : key.pollEvents()) {
                     final String context = String.valueOf(event.context());
