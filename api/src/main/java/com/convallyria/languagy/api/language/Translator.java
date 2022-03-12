@@ -1,11 +1,11 @@
-package net.islandearth.languagy.api.language;
+package com.convallyria.languagy.api.language;
 
-import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.api.event.AsyncPlayerTranslateEvent;
-import net.islandearth.languagy.api.language.key.LanguageKey;
-import net.islandearth.languagy.api.language.key.TranslationKey;
-import net.islandearth.languagy.api.language.translation.Translation;
-import net.islandearth.languagy.api.service.LanguageWatchService;
+import com.convallyria.languagy.api.HookedPlugin;
+import com.convallyria.languagy.api.event.AsyncPlayerTranslateEvent;
+import com.convallyria.languagy.api.language.key.LanguageKey;
+import com.convallyria.languagy.api.language.key.TranslationKey;
+import com.convallyria.languagy.api.language.translation.Translation;
+import com.convallyria.languagy.api.service.LanguageWatchService;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -59,6 +59,7 @@ public class Translator {
 
     /**
      * Create a new translator.
+     * It is important that you call {@link #close()} in your plugin's onDisable.
      * @param plugin your plugin instance
      * @see #of(Plugin, Language)
      * @see #of(Plugin, String, Language)
@@ -69,6 +70,7 @@ public class Translator {
 
     /**
      * Create a new translator.
+     * It is important that you call {@link #close()} in your plugin's onDisable.
      * @param plugin your plugin instance
      * @param defaultLanguage the default language you wish to use
      * @see #of(Plugin)
@@ -80,6 +82,7 @@ public class Translator {
 
     /**
      * Create a new translator.
+     * It is important that you call {@link #close()} in your plugin's onDisable.
      * @param plugin your plugin instance
      * @param folderName the folder you wish to use for language files, this should match your resources folder
      * @param defaultLanguage the default language you wish to use

@@ -1,11 +1,12 @@
-package net.islandearth.languagy.api.language.translation;
+package com.convallyria.languagy.api.language.translation;
 
+import com.convallyria.languagy.api.language.Language;
 import com.google.common.collect.Lists;
-import net.islandearth.languagy.api.language.Language;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Locale;
 
 public class Translation {
 
@@ -41,6 +42,17 @@ public class Translation {
      */
     public void send() {
         colour().forEach(player::sendMessage);
+    }
+
+    /**
+     * Formats the translation with the provided values, using {@link String#format(String, Object...)}
+     * @param values formatting values
+     */
+    public void format(Object... values) {
+        for (int i = 0; i < translations.size(); i++) {
+            final String translation = translations.get(i);
+            translations.set(i, String.format(Locale.ROOT, translation, values));
+        }
     }
 
     /**

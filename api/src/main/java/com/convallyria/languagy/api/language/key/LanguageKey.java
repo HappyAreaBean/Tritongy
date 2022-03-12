@@ -1,4 +1,4 @@
-package net.islandearth.languagy.api.language.key;
+package com.convallyria.languagy.api.language.key;
 
 import org.jetbrains.annotations.NotNull;
 

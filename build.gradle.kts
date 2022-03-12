@@ -9,7 +9,7 @@ dependencies {
 }
 
 allprojects {
-    group = "net.islandearth.languagy"
+    group = "com.convallyria.languagy"
     version = "3.0.0-SNAPSHOT"
 
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -18,6 +18,8 @@ allprojects {
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+        withSourcesJar()
+        withJavadocJar()
     }
 
     repositories {

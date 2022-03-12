@@ -1,8 +1,8 @@
-package net.islandearth.languagy.api.service;
+package com.convallyria.languagy.api.service;
 
-import net.islandearth.languagy.api.HookedPlugin;
-import net.islandearth.languagy.api.language.Language;
-import net.islandearth.languagy.api.language.key.LanguageKey;
+import com.convallyria.languagy.api.HookedPlugin;
+import com.convallyria.languagy.api.language.Language;
+import com.convallyria.languagy.api.language.key.LanguageKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
