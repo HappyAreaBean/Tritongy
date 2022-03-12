@@ -9,7 +9,15 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface LanguagyImplementation {
 
-	Language value();
+	/**
+	 * Gets the default language of this implementation.
+	 * @return default language, defaulting to {@link Language#ENGLISH}
+	 */
+	Language value() default Language.ENGLISH;
 
+	/**
+	 * Gets the default language folder of this implementation.
+	 * @return the default language folder, defaulting to "lang"
+	 */
 	String defaultFolder() default "lang";
 }

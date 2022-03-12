@@ -1,7 +1,10 @@
 package net.islandearth.languagy.api.language;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum Language {
 	ENGLISH("en_gb"),
+	UPSIDE_DOWN_ENGLISH("en_ud"),
 	GERMAN("de_de"),
 	FRENCH("fr_fr"),
 	SPANISH("es_es"),
@@ -13,9 +16,12 @@ public enum Language {
 	CZECH("cs_cz"),
 	SLOVAKIAN("sk_sk"),
 	AFRIKAANS("af_za"),
+	ANGLISH("enp"),
 	ARABIC("ar_sa"),
 	ASTURIAN("ast_es"),
 	AZERBAIJANI("az_az"),
+	BASHKIR("ba_ru"),
+	BAVARIAN("bar"),
 	BELARUSIAN("be_by"),
 	BULGARIAN("bg_bg"),
 	BRETON("br_fr"),
@@ -32,14 +38,18 @@ public enum Language {
 	ESPERANTO("eo_uy"),
 	ARGENTINIAN_SPANISH("es_ar"),
 	CHILEAN_SPANISH("es_CL"),
+	ECUADORIAN_SPANISH("es_ec"),
 	MEXICAN_SPANISH("es_mx"),
 	URUGUAYAN_SPANISH("es_uy"),
 	VENEZUELAN_SPANISH("es_ve"),
+	ANDALUSIAN("esan"),
 	ESTONIAN("et_ee"),
 	BASQUE("eu_es"),
 	PERSIAN("fa_ir"),
 	FILIPINO("fil_ph"),
 	FAROESE("fo_fo"),
+	EAST_FRANCONIAN("fra_de"),
+	FRIULIAN("fur_it"),
 	FRISIAN("fy_nl"),
 	IRISH("ga_ie"),
 	SCOTTISH_GAELIC("gd_gb"),
@@ -55,9 +65,11 @@ public enum Language {
 	IGBO("ig_ng"),
 	IDO("io_en"),
 	ICELANDIC("is_is"),
+	INTERSLAVIC("isv"),
 	JAPANESE("ja_jp"),
 	LOJBAN("jbo"),
 	GEORGIAN("ka_ge"),
+	KAZAKH("kk_kz"),
 	KABYLE("kab_dz"),
 	KANNADA("kn_in"),
 	KOREAN("ko_kr"),
@@ -93,7 +105,7 @@ public enum Language {
 	CHINESE_SIMPLIFIED("zh_cn"),
 	CHINESE_TRADITIONAL("zh_tw");
 
-	private String code;
+	private final String code;
 
 	Language(String code) {
 		this.code = code;
@@ -104,15 +116,16 @@ public enum Language {
 	}
 
 	/**
-	 *
-	 * @param code - the language code, e.g "en_gb"
-	 * @return The language. If the language does
-	 * not exist within the enum, ENGLISH
-	 * is returned as the fallback default.
+	 * Gets a language from the specified code.
+	 * If the language does not exist within the enum, {@link Language#ENGLISH} is returned as the fallback default.
+	 * @param code the language code, such as "en_gb"
+	 * @return the language from the provided code
 	 */
+	@NotNull
 	public static Language getFromCode(String code) {
 		for (Language language : values()) {
 			if (language.getCode().equals(code)) return language;
-		} return Language.ENGLISH;
+		}
+		return Language.ENGLISH;
 	}
 }

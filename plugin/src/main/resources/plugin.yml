@@ -1,8 +1,0 @@
-name: Languagy
-main: net.islandearth.languagy.LanguagyPlugin
-author: SamB440
-website: https://fortitude.islandearth.net
-version: @version@
-softdepend: [Plan]
-api-version: 1.13
-commands:

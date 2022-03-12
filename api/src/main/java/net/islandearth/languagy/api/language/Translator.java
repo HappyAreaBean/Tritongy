@@ -3,7 +3,6 @@ package net.islandearth.languagy.api.language;
 import net.islandearth.languagy.api.HookedPlugin;
 import net.islandearth.languagy.api.LanguagyCache;
 import net.islandearth.languagy.api.event.AsyncPlayerTranslateEvent;
-import net.islandearth.languagy.api.event.PluginHookEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -80,9 +79,9 @@ public class Translator {
 	@NotNull
 	public String getTranslationFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
-		File file = new File(lang + File.separator + target.getLocale() + ".yml");
+		File file = new File(lang + File.separator + target.spigot().getLocale() + ".yml");
 		if (file.exists()) {
-			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
+			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.spigot().getLocale()));
 			if (config.getString(path) == null) {
 				if (hook.isDebug()) plugin.getLogger().warning("[Languagy] Translation was requested, but path did not exist in target locale! Try regenerating language files?");
 				FileConfiguration fallbackConfig = hook.getCachedLanguages().get(language);
@@ -124,9 +123,9 @@ public class Translator {
 	@NotNull
 	public List<String> getTranslationListFor(@NotNull Player target, @NotNull String path) {
 		String lang = fallback.getAbsoluteFile().getParentFile().toString();
-		File file = new File(lang + File.separator + target.getLocale() + ".yml");
+		File file = new File(lang + File.separator + target.spigot().getLocale() + ".yml");
 		if (file.exists()) {
-			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
+			FileConfiguration config = hook.getCachedLanguages().get(Language.getFromCode(target.spigot().getLocale()));
 			
 			List<String> vals = new ArrayList<>();
 			for (String string : config.getStringList(path)) {
@@ -150,12 +149,12 @@ public class Translator {
 	
 	/**
 	 * Gets the language config for the specified player.
-	 * @param target Player
-	 * @return configuration for player's language
+	 * @param target the target player
+	 * @return configuration file for the player's language
 	 */
 	@Nullable
 	public FileConfiguration getFileConfiguration(@NotNull Player target) {
-		return hook.getCachedLanguages().get(Language.getFromCode(target.getLocale()));
+		return hook.getCachedLanguages().get(Language.getFromCode(target.spigot().getLocale()));
 	}
 	
 	private void setup(Plugin plugin, File fallback) {
@@ -219,7 +218,6 @@ public class Translator {
 	public Plugin getPlugin() {
 		return plugin;
 	}
-
 
 	private String translate(String message) {
 		return ChatColor.translateAlternateColorCodes('&', message);

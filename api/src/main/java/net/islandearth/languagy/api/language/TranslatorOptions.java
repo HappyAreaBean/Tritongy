@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+@Deprecated
 public class TranslatorOptions {
 	
 	private final Translator translator;

@@ -7,10 +7,10 @@ import org.bukkit.event.HandlerList;
 
 public class AsyncPlayerTranslateEvent extends Event {
 	
-	private Player player;
-	private String path;
-	private Object translation;
-	private HookedPlugin plugin;
+	private final Player player;
+	private final String path;
+	private final Object translation;
+	private final HookedPlugin plugin;
 	
 	public AsyncPlayerTranslateEvent(Player player, String path, Object translation, HookedPlugin plugin) {
 		super(true);
