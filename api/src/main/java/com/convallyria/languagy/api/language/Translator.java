@@ -16,10 +16,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.logging.Level;
 
 public class Translator {
+
+    private Method LEGACY_LOCALE_METHOD;
 
     private final Plugin plugin;
     private final Language defaultLanguage;
@@ -30,6 +33,15 @@ public class Translator {
     private LanguageWatchService watchService;
 
     private Translator(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage) {
+        // Initialise legacy support if needed
+        if (getVersionNumber() < 15) { // 1.15 removed Player#Spigot#getLocale
+            try {
+                LEGACY_LOCALE_METHOD = Player.Spigot.class.getMethod("getLocale");
+            } catch (NoSuchMethodException e) {
+                plugin.getLogger().log(Level.SEVERE, "Tried to initialise legacy support but failed.", e);
+            }
+        }
+
         this.plugin = plugin;
         this.defaultLanguage = defaultLanguage;
 
@@ -122,8 +134,8 @@ public class Translator {
      */
     public Translation getTranslationFor(@NotNull Player target, @NotNull TranslationKey key) {
         String lang = fallback.getAbsoluteFile().getParentFile().toString();
-        File file = new File(lang + File.separator + target.spigot().getLocale() + ".yml");
-        final Language targetLanguage = Language.getFromKey(LanguageKey.of(target.spigot().getLocale())).orElse(defaultLanguage);
+        final Language targetLanguage = getLanguage(target);
+        File file = new File(lang + File.separator + targetLanguage.getKey().getCode() + ".yml");
         FileConfiguration config = file.exists()
                 ? hook.getCachedLanguages().get(targetLanguage)
                 : hook.getCachedLanguages().get(defaultLanguage);
@@ -146,6 +158,10 @@ public class Translator {
         return translation;
     }
 
+    public Language getLanguage(Player player) {
+        return Language.getFromKey(LanguageKey.of(getLocale(player))).orElse(defaultLanguage);
+    }
+
     /**
      * Gets the language config for the specified player.
      * This will use the default language provided if the player's locale has no translation file available.
@@ -154,7 +170,7 @@ public class Translator {
      */
     @Nullable
     public FileConfiguration getFileConfiguration(@NotNull Player target) {
-        final Optional<Language> key = Language.getFromKey(LanguageKey.of(target.spigot().getLocale()));
+        final Optional<Language> key = Language.getFromKey(LanguageKey.of(getLocale(target)));
         return key.map(language -> hook.getCachedLanguages().get(language)).orElse(hook.getCachedLanguages().get(defaultLanguage));
     }
 
@@ -197,5 +213,23 @@ public class Translator {
 
     private void debug(String info) {
         if (isDebug()) plugin.getLogger().info("[Languagy] " + info);
+    }
+
+    private String getLocale(final Player player) {
+        try {
+            return player.getLocale();
+        } catch (Exception e) {
+            try {
+                return (String) LEGACY_LOCALE_METHOD.invoke(player);
+            } catch (ReflectiveOperationException ex) {
+                plugin.getLogger().log(Level.SEVERE, "[Languagy] Failed to invoke legacy support", ex);
+            }
+        }
+        return "en_us";
+    }
+
+    private int getVersionNumber() {
+        String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+        return Integer.parseInt(split[1]);
     }
 }
