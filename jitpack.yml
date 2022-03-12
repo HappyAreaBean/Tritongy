@@ -1,4 +1,0 @@
-jdk:
-  - openjdk11
-install:
-  - gradle api:install

@@ -9,7 +9,7 @@ dependencies {
 
 allprojects {
     group = "net.islandearth.languagy"
-    version = "2.0.5"
+    version = "3.0.0"
 
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "java")
