@@ -5,6 +5,7 @@ import com.convallyria.languagy.api.language.translation.Translation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class AsyncPlayerTranslateEvent extends Event {
 
@@ -21,7 +22,7 @@ public class AsyncPlayerTranslateEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

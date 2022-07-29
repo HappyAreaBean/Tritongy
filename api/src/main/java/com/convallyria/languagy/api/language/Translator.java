@@ -32,7 +32,7 @@ public class Translator {
     private HookedPlugin hook;
     private LanguageWatchService watchService;
 
-    private Translator(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage) {
+    private Translator(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug) {
         // Initialise legacy support if needed
         if (getVersionNumber() < 15) { // 1.15 removed Player#Spigot#getLocale
             try {
@@ -75,9 +75,10 @@ public class Translator {
      * @param plugin your plugin instance
      * @see #of(Plugin, Language)
      * @see #of(Plugin, String, Language)
+     * @return The {@link Translator} instance
      */
     public static Translator of(@NotNull Plugin plugin) {
-        return of(plugin, "lang", Language.ENGLISH);
+        return of(plugin, Language.ENGLISH);
     }
 
     /**
@@ -87,6 +88,7 @@ public class Translator {
      * @param defaultLanguage the default language you wish to use
      * @see #of(Plugin)
      * @see #of(Plugin, String, Language)
+     * @return The {@link Translator} instance
      */
     public static Translator of(@NotNull final Plugin plugin, @NotNull final Language defaultLanguage) {
         return of(plugin, "lang", defaultLanguage);
@@ -99,10 +101,27 @@ public class Translator {
      * @param folderName the folder you wish to use for language files, this should match your resources folder
      * @param defaultLanguage the default language you wish to use
      * @see #of(Plugin)
-     * @see #of(Plugin, Language)
+     * @see #of(Plugin, String, Language) 
+     * @see #of(Plugin, String, Language, boolean)
+     * @return The {@link Translator} instance
      */
     public static Translator of(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage) {
-        return new Translator(plugin, folderName, defaultLanguage);
+        return of(plugin, folderName, defaultLanguage, false);
+    }
+
+    /**
+     * Create a new translator.
+     * It is important that you call {@link #close()} in your plugin's onDisable.
+     * @param plugin your plugin instance
+     * @param folderName the folder you wish to use for language files, this should match your resources folder
+     * @param defaultLanguage the default language you wish to use
+     * @param debug whether debug output should be shown or not
+     * @see #of(Plugin)
+     * @see #of(Plugin, Language)
+     * @return The {@link Translator} instance
+     */
+    public static Translator of(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug) {
+        return new Translator(plugin, folderName, defaultLanguage, debug);
     }
 
     /**
@@ -122,10 +141,10 @@ public class Translator {
 
     /**
      * Gets the translation for a player.
-     * <p></p>
+     * <br>
      * If the player's locale has no existing translation,
      *  then this will use the default language provided in the constructor.
-     * <p></p>
+     * <br>
      * This will also attempt to resolve the type within the config.
      * If it is a list, then that shall be used, otherwise it will be a normal string.
      * @param target the target player
