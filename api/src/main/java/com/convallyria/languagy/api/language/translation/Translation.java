@@ -49,10 +49,7 @@ public class Translation {
      * @param values formatting values
      */
     public void format(Object... values) {
-        for (int i = 0; i < translations.size(); i++) {
-            final String translation = translations.get(i);
-            translations.set(i, String.format(Locale.ROOT, translation, values));
-        }
+        translations.replaceAll(s -> String.format(Locale.ROOT, s, values));
     }
 
     /**
