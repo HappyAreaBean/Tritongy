@@ -40,14 +40,14 @@ public class LanguageWatchService {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     final String context = String.valueOf(event.context());
                     final Optional<Language> language = Language.getFromKey(LanguageKey.of(context.replace(".yml", "")));
-                    if (!language.isPresent()) return;
+                    if (!language.isPresent()) continue;
 
                     if (event.kind().equals(ENTRY_DELETE)) {
                         // Check if it's the fallback file, and if so, cancel the removal from the cache
                         // data cached to be available to use.
                         // The plugin should replace it on the next restart.
                         if (hookedPlugin.getFallback().getName().equals(context)) {
-                            return;
+                            continue;
                         }
 
                         hookedPlugin.removeCachedLanguage(language.get());
