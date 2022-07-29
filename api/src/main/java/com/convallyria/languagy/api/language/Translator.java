@@ -44,6 +44,7 @@ public class Translator {
 
         this.plugin = plugin;
         this.defaultLanguage = defaultLanguage;
+        this.debug = debug;
 
         File fallback = new File(plugin.getDataFolder()
                 + File.separator
