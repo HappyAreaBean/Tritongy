@@ -10,7 +10,7 @@ dependencies {
 
 allprojects {
     group = "com.convallyria.languagy"
-    version = "3.0.1-SNAPSHOT"
+    version = "3.0.1"
 
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "java")
