@@ -71,7 +71,10 @@ public class Translator {
     }
 
     /**
-     * Create a new translator.
+     * Create a new translator. Defaults the language to {@link Language#BRITISH_ENGLISH}
+     * <br><br>
+     * <b>Warning:</b> This behaviour may change in the future and change to the {@link Language#AMERICAN_ENGLISH} default.
+     * <br><br>
      * It is important that you call {@link #close()} in your plugin's onDisable.
      * @param plugin your plugin instance
      * @see #of(Plugin, Language)
@@ -79,7 +82,7 @@ public class Translator {
      * @return The {@link Translator} instance
      */
     public static Translator of(@NotNull Plugin plugin) {
-        return of(plugin, Language.ENGLISH);
+        return of(plugin, Language.BRITISH_ENGLISH);
     }
 
     /**

@@ -6,7 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public enum Language {
+    /**
+     * @deprecated Use either {@link Language#BRITISH_ENGLISH} or {@link Language#AMERICAN_ENGLISH}
+     */
+    @Deprecated
     ENGLISH("en_gb"),
+    BRITISH_ENGLISH("en_gb"),
+    AMERICAN_ENGLISH("en_us"),
     UPSIDE_DOWN_ENGLISH("en_ud"),
     GERMAN("de_de"),
     FRENCH("fr_fr"),
