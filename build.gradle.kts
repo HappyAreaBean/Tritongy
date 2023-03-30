@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
     id("maven-publish")
 }
@@ -10,7 +10,7 @@ dependencies {
 
 allprojects {
     group = "com.convallyria.languagy"
-    version = "3.0.2-SNAPSHOT"
+    version = "3.0.2"
 
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "java")

@@ -22,6 +22,9 @@ import java.util.logging.Level;
 
 public class Translator {
 
+    // Default to true, then try to resolve in translator constructor, if it throws this is set to false.
+    public static boolean RUNNING_FOLIA = true;
+
     private Method LEGACY_LOCALE_METHOD;
 
     private final Plugin plugin;
@@ -40,6 +43,12 @@ public class Translator {
             } catch (NoSuchMethodException e) {
                 plugin.getLogger().log(Level.SEVERE, "Tried to initialise legacy support but failed.", e);
             }
+        }
+
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
+        } catch (final ReflectiveOperationException e) {
+            RUNNING_FOLIA = false;
         }
 
         this.plugin = plugin;
@@ -177,7 +186,14 @@ public class Translator {
             translation = Translation.of(target, targetLanguage, config.getString(key.getKey()));
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, translation, hook)));
+        if (!RUNNING_FOLIA) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, translation, hook)));
+        } else {
+            // I don't care enough to hook into Folia's API and use their scheduler
+            // Async events on Folia are deprecated anyway
+            Bukkit.getPluginManager().callEvent(new AsyncPlayerTranslateEvent(target, translation, hook));
+        }
+
         return translation;
     }
 

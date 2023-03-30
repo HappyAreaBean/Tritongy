@@ -1,6 +1,7 @@
 package com.convallyria.languagy.api.event;
 
 import com.convallyria.languagy.api.HookedPlugin;
+import com.convallyria.languagy.api.language.Translator;
 import com.convallyria.languagy.api.language.translation.Translation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -14,7 +15,7 @@ public class AsyncPlayerTranslateEvent extends Event {
     private final HookedPlugin plugin;
 
     public AsyncPlayerTranslateEvent(Player player, Translation translation, HookedPlugin plugin) {
-        super(true);
+        super(!Translator.RUNNING_FOLIA);
         this.player = player;
         this.translation = translation;
         this.plugin = plugin;
