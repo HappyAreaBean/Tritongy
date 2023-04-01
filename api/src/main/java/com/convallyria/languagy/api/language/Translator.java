@@ -58,6 +58,10 @@ public class Translator {
         this.defaultLanguage = defaultLanguage;
         this.debug = debug;
 
+        if (adventure != null) {
+            debug("Adventure initialized");
+        }
+
         File fallback = new File(plugin.getDataFolder()
                 + File.separator
                 + folderName
@@ -88,12 +92,14 @@ public class Translator {
      * <b>Warning:</b> This behaviour may change in the future and change to the {@link Language#AMERICAN_ENGLISH} default.
      * <br><br>
      * It is important that you call {@link #close()} in your plugin's onDisable.
+     * @deprecated Legacy text is deprecated and Mojang have stated it will be removed in the future, use {@link #of(Plugin, AdventurePlatform)} instead.
      * @param plugin your plugin instance
      * @see #of(Plugin, Language)
      * @see #of(Plugin, AdventurePlatform)
      * @see #of(Plugin, String, Language)
      * @return The {@link Translator} instance
      */
+    @Deprecated
     public static Translator of(@NotNull Plugin plugin) {
         return of(plugin, Language.BRITISH_ENGLISH);
     }
@@ -113,12 +119,14 @@ public class Translator {
     /**
      * Create a new translator.
      * It is important that you call {@link #close()} in your plugin's onDisable.
+     * @deprecated Legacy text is deprecated and Mojang have stated it will be removed in the future, use {@link #of(Plugin, Language, AdventurePlatform)} instead.
      * @param plugin your plugin instance
      * @param defaultLanguage the default language you wish to use
      * @see #of(Plugin)
      * @see #of(Plugin, String, Language)
      * @return The {@link Translator} instance
      */
+    @Deprecated
     public static Translator of(@NotNull final Plugin plugin, @NotNull final Language defaultLanguage) {
         return of(plugin, "lang", defaultLanguage);
     }
@@ -139,6 +147,7 @@ public class Translator {
     /**
      * Create a new translator.
      * It is important that you call {@link #close()} in your plugin's onDisable.
+     * @deprecated Legacy text is deprecated and Mojang have stated it will be removed in the future, use {@link #of(Plugin, String, Language, AdventurePlatform)} instead.
      * @param plugin your plugin instance
      * @param folderName the folder you wish to use for language files, this should match your resources folder
      * @param defaultLanguage the default language you wish to use
@@ -147,6 +156,7 @@ public class Translator {
      * @see #of(Plugin, String, Language, boolean)
      * @return The {@link Translator} instance
      */
+    @Deprecated
     public static Translator of(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage) {
         return of(plugin, folderName, defaultLanguage, false);
     }
@@ -165,6 +175,7 @@ public class Translator {
 
     /**
      * Create a new translator.
+     * @deprecated Legacy text is deprecated and Mojang have stated it will be removed in the future, use {@link #of(Plugin, String, Language, boolean, AdventurePlatform)} instead.
      * @param plugin your plugin instance
      * @param folderName the folder you wish to use for language files, this should match your resources folder
      * @param defaultLanguage the default language you wish to use
@@ -173,6 +184,7 @@ public class Translator {
      * @see #of(Plugin, Language)
      * @return The {@link Translator} instance
      */
+    @Deprecated
     public static Translator of(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug) {
         return of(plugin, folderName, defaultLanguage, debug, null);
     }

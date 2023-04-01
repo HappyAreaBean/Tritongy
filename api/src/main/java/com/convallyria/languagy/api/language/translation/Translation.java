@@ -10,8 +10,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Translation {
 
@@ -76,8 +79,10 @@ public class Translation {
 
     /**
      * Sends a legacy coloured message to the player.
+     * @deprecated Legacy text is deprecated and Mojang have stated it will be removed in the future, use {@link #send()} instead.
      * @see #legacyColour()
      */
+    @Deprecated
     public void sendLegacy() {
         legacyColour().forEach(player::sendMessage);
     }
@@ -121,8 +126,10 @@ public class Translation {
 
     /**
      * Gets a coloured string representation, as formatted by {@link ChatColor#translateAlternateColorCodes(char, String)}
+     * @deprecated Legacy text is deprecated and Mojang have stated it will be removed in the future, use {@link #colour()} instead.
      * @return string representation of coloured text
      */
+    @Deprecated
     public List<String> legacyColour() {
         List<String> colouredText = Lists.newArrayList();
         translations.forEach(translation -> {
@@ -133,6 +140,7 @@ public class Translation {
         return colouredText;
     }
 
+    @Deprecated
     private String legacyColour(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
