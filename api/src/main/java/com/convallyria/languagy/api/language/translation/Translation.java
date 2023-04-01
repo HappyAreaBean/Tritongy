@@ -1,9 +1,14 @@
 package com.convallyria.languagy.api.language.translation;
 
+import com.convallyria.languagy.api.adventure.AdventurePlatform;
 import com.convallyria.languagy.api.language.Language;
 import com.google.common.collect.Lists;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
@@ -13,19 +18,31 @@ public class Translation {
     private final Player player;
     private final Language language;
     private final List<String> translations;
+    private final @Nullable AdventurePlatform adventure;
 
-    private Translation(final Player player, final Language language, final List<String> translations) {
+    private Translation(final Player player, final Language language, final List<String> translations, @Nullable AdventurePlatform adventure) {
         this.player = player;
         this.language = language;
         this.translations = translations;
+        this.adventure = adventure;
     }
 
+    @Deprecated
     public static Translation of(final Player player, final Language language, final String translation) {
-        return new Translation(player, language, Lists.newArrayList(translation));
+        return of(player, language, translation, null);
     }
 
+    public static Translation of(final Player player, final Language language, final String translation, @Nullable AdventurePlatform adventure) {
+        return of(player, language, Lists.newArrayList(translation), adventure);
+    }
+
+    @Deprecated
     public static Translation of(final Player player, final Language language, final List<String> translations) {
-        return new Translation(player, language, translations);
+        return of(player, language, translations, null);
+    }
+
+    public static Translation of(final Player player, final Language language, final List<String> translations, @Nullable AdventurePlatform adventure) {
+        return new Translation(player, language, translations, adventure);
     }
 
     /**
@@ -37,11 +54,32 @@ public class Translation {
     }
 
     /**
+     * Gets the adventure implementation used to colour messages.
+     * @return the {@link AdventurePlatform} implementation, or null if none
+     */
+    public @Nullable AdventurePlatform getAdventure() {
+        return adventure;
+    }
+
+    /**
      * Sends a coloured message to the player.
-     * @see #colour()
+     * If no adventure implementation has been provided, this will use {@link #sendLegacy()}.
      */
     public void send() {
-        colour().forEach(player::sendMessage);
+        if (adventure == null) {
+            sendLegacy();
+            return;
+        }
+
+        colour().forEach(component -> adventure.adventure().player(player).sendMessage(component));
+    }
+
+    /**
+     * Sends a legacy coloured message to the player.
+     * @see #legacyColour()
+     */
+    public void sendLegacy() {
+        legacyColour().forEach(player::sendMessage);
     }
 
     /**
@@ -62,18 +100,40 @@ public class Translation {
     }
 
     /**
-     * Gets a coloured string representation, as formatted by {@link ChatColor#translateAlternateColorCodes(char, String)}
-     * @return string representation of coloured text
+     * Gets a coloured {@link Component} representation, as formatted by {@link MiniMessage#deserialize(Object)}
+     * If no adventure implementation has been provided, this will use the {@link LegacyComponentSerializer}.
+     * @return component representation of coloured text
      */
-    public List<String> colour() {
-        List<String> colouredText = Lists.newArrayList();
+    public List<Component> colour() {
+        List<Component> colouredText = Lists.newArrayList();
         translations.forEach(translation -> {
-            if (!translation.isEmpty()) colouredText.add(colour(translation));
+            if (!translation.isEmpty()) {
+                if (adventure != null) {
+                    final Component component = adventure.miniMessage().deserialize(translation);
+                    colouredText.add(component);
+                } else {
+                    colouredText.add(LegacyComponentSerializer.legacyAmpersand().deserialize(translation));
+                }
+            }
         });
         return colouredText;
     }
 
-    private String colour(String text) {
+    /**
+     * Gets a coloured string representation, as formatted by {@link ChatColor#translateAlternateColorCodes(char, String)}
+     * @return string representation of coloured text
+     */
+    public List<String> legacyColour() {
+        List<String> colouredText = Lists.newArrayList();
+        translations.forEach(translation -> {
+            if (!translation.isEmpty()) {
+                colouredText.add(legacyColour(translation));
+            }
+        });
+        return colouredText;
+    }
+
+    private String legacyColour(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 }

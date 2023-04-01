@@ -1,6 +1,7 @@
 package com.convallyria.languagy.api.language;
 
 import com.convallyria.languagy.api.HookedPlugin;
+import com.convallyria.languagy.api.adventure.AdventurePlatform;
 import com.convallyria.languagy.api.event.AsyncPlayerTranslateEvent;
 import com.convallyria.languagy.api.language.key.LanguageKey;
 import com.convallyria.languagy.api.language.key.TranslationKey;
@@ -28,6 +29,7 @@ public class Translator {
     private Method LEGACY_LOCALE_METHOD;
 
     private final Plugin plugin;
+    private final @Nullable AdventurePlatform adventure;
     private final Language defaultLanguage;
 
     private File fallback;
@@ -35,7 +37,7 @@ public class Translator {
     private HookedPlugin hook;
     private LanguageWatchService watchService;
 
-    private Translator(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug) {
+    private Translator(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug, @Nullable AdventurePlatform adventure) {
         // Initialise legacy support if needed
         if (getVersionNumber() < 15) { // 1.15 removed Player#Spigot#getLocale
             try {
@@ -52,6 +54,7 @@ public class Translator {
         }
 
         this.plugin = plugin;
+        this.adventure = adventure;
         this.defaultLanguage = defaultLanguage;
         this.debug = debug;
 
@@ -87,11 +90,24 @@ public class Translator {
      * It is important that you call {@link #close()} in your plugin's onDisable.
      * @param plugin your plugin instance
      * @see #of(Plugin, Language)
+     * @see #of(Plugin, AdventurePlatform)
      * @see #of(Plugin, String, Language)
      * @return The {@link Translator} instance
      */
     public static Translator of(@NotNull Plugin plugin) {
         return of(plugin, Language.BRITISH_ENGLISH);
+    }
+
+    /**
+     * Creates a new translator with adventure support.
+     * @param plugin your plugin instance
+     * @param adventure the adventure implementation to colour messages with
+     * @see #of(Plugin)
+     * @see #of(Plugin, Language, AdventurePlatform)
+     * @return The {@link Translator} instance
+     */
+    public static Translator of(@NotNull Plugin plugin, @Nullable AdventurePlatform adventure) {
+        return of(plugin, Language.BRITISH_ENGLISH, adventure);
     }
 
     /**
@@ -108,13 +124,26 @@ public class Translator {
     }
 
     /**
+     * Creates a new translator with adventure support.
+     * @param plugin your plugin instance
+     * @param defaultLanguage the default language you wish to use
+     * @param adventure the adventure implementation to colour messages with
+     * @see #of(Plugin, AdventurePlatform)
+     * @see #of(Plugin, String, Language, AdventurePlatform)
+     * @return The {@link Translator} instance
+     */
+    public static Translator of(@NotNull final Plugin plugin, @NotNull final Language defaultLanguage, @Nullable AdventurePlatform adventure) {
+        return of(plugin, "lang", defaultLanguage, adventure);
+    }
+
+    /**
      * Create a new translator.
      * It is important that you call {@link #close()} in your plugin's onDisable.
      * @param plugin your plugin instance
      * @param folderName the folder you wish to use for language files, this should match your resources folder
      * @param defaultLanguage the default language you wish to use
      * @see #of(Plugin)
-     * @see #of(Plugin, String, Language) 
+     * @see #of(Plugin, String, Language)
      * @see #of(Plugin, String, Language, boolean)
      * @return The {@link Translator} instance
      */
@@ -123,8 +152,19 @@ public class Translator {
     }
 
     /**
+     * Creates a new translator with adventure support.
+     * @param plugin your plugin instance
+     * @param folderName the folder you wish to use for language files, this should match your resources folder
+     * @param defaultLanguage the default language you wish to use
+     * @param adventure the adventure implementation to colour messages with
+     * @return The {@link Translator} instance
+     */
+    public static Translator of(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, @Nullable AdventurePlatform adventure) {
+        return of(plugin, folderName, defaultLanguage, false, adventure);
+    }
+
+    /**
      * Create a new translator.
-     * It is important that you call {@link #close()} in your plugin's onDisable.
      * @param plugin your plugin instance
      * @param folderName the folder you wish to use for language files, this should match your resources folder
      * @param defaultLanguage the default language you wish to use
@@ -134,7 +174,22 @@ public class Translator {
      * @return The {@link Translator} instance
      */
     public static Translator of(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug) {
-        return new Translator(plugin, folderName, defaultLanguage, debug);
+        return of(plugin, folderName, defaultLanguage, debug, null);
+    }
+
+    /**
+     * Creates a new translator with adventure support.
+     * @param plugin your plugin instance
+     * @param folderName the folder you wish to use for language files, this should match your resources folder
+     * @param defaultLanguage the default language you wish to use
+     * @param debug whether debug output should be shown or not
+     * @param adventure the adventure implementation to colour messages with
+     * @see #of(Plugin)
+     * @see #of(Plugin, Language)
+     * @return The {@link Translator} instance
+     */
+    public static Translator of(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug, @Nullable AdventurePlatform adventure) {
+        return new Translator(plugin, folderName, defaultLanguage, debug, adventure);
     }
 
     /**
@@ -176,14 +231,14 @@ public class Translator {
                 String text = "[Languagy] Translation was requested, but path did not exist in '%s'! Try regenerating language files?";
                 plugin.getLogger().warning(String.format(text, file.exists() ? targetLanguage : defaultLanguage));
             }
-            return Translation.of(target, targetLanguage, TranslationKeys.NOT_FOUND.getKey());
+            return Translation.of(target, targetLanguage, TranslationKeys.NOT_FOUND.getKey(), adventure);
         }
 
         final Translation translation;
         if (config.isList(key.getKey())) {
-            translation = Translation.of(target, targetLanguage, config.getStringList(key.getKey()));
+            translation = Translation.of(target, targetLanguage, config.getStringList(key.getKey()), adventure);
         } else {
-            translation = Translation.of(target, targetLanguage, config.getString(key.getKey()));
+            translation = Translation.of(target, targetLanguage, config.getString(key.getKey()), adventure);
         }
 
         if (!RUNNING_FOLIA) {
