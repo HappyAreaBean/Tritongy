@@ -9,7 +9,7 @@ dependencies {
 }
 
 allprojects {
-    group = "com.convallyria.languagy"
+    group = "net.fantasyrealms.tritongy"
     version = "3.0.3-SNAPSHOT"
 
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -35,13 +35,13 @@ allprojects {
             // See Gradle docs for how to provide credentials to PasswordCredentials
             // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
             maven {
-                name = "convallyriaSnapshots"
-                url = uri("https://repo.convallyria.com/snapshots/")
+                name = "frsSnapshots"
+                url = uri("https://repo.fantasyrealms.net/snapshots/")
                 credentials(PasswordCredentials::class)
             }
             maven {
-                name = "convallyriaReleases"
-                url = uri("https://repo.convallyria.com/releases/")
+                name = "frsReleases"
+                url = uri("https://repo.fantasyrealms.net/releases/")
                 credentials(PasswordCredentials::class)
             }
         }

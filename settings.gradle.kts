@@ -1,2 +1,2 @@
-rootProject.name = "Languagy"
+rootProject.name = "Tritongy"
 include("api")
