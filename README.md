@@ -1,10 +1,10 @@
-Languagy
+Tritongy
 =============
-Languagy is a Spigot API for providing player-individual languages for plugins. It supports all languages that the Minecraft client supports.
-<hr>
 
-Spigot: https://www.spigotmc.org/resources/languagy-1-9-1-15.61663/
-<br>
-Wiki: https://fortitude.islandearth.net
+Tritongy is a Spigot API for providing player-individual languages message based on player's selected language in Triton.
 
 <hr>
+
+## Credits
+
+* Forked from Languagy — https://gitlab.com/SamB440/languagy
