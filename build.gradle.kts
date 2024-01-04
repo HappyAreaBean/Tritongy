@@ -10,7 +10,7 @@ dependencies {
 
 allprojects {
     group = "net.fantasyrealms.tritongy"
-    version = "3.0.3"
+    version = "3.0.4-SNAPSHOT"
 
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "java")
