@@ -7,6 +7,7 @@ import com.convallyria.languagy.api.language.key.LanguageKey;
 import com.convallyria.languagy.api.language.key.TranslationKey;
 import com.convallyria.languagy.api.language.translation.Translation;
 import com.convallyria.languagy.api.service.LanguageWatchService;
+import com.rexcantor64.triton.api.TritonAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,8 +27,6 @@ public class Translator {
     // Default to true, then try to resolve in translator constructor, if it throws this is set to false.
     public static boolean RUNNING_FOLIA = true;
 
-    private Method LEGACY_LOCALE_METHOD;
-
     private final Plugin plugin;
     private final @Nullable AdventurePlatform adventure;
     private final Language defaultLanguage;
@@ -38,15 +37,6 @@ public class Translator {
     private LanguageWatchService watchService;
 
     private Translator(@NotNull Plugin plugin, @NotNull String folderName, @NotNull Language defaultLanguage, boolean debug, @Nullable AdventurePlatform adventure) {
-        // Initialise legacy support if needed
-        if (getVersionNumber() < 15) { // 1.15 removed Player#Spigot#getLocale
-            try {
-                LEGACY_LOCALE_METHOD = Player.Spigot.class.getMethod("getLocale");
-            } catch (NoSuchMethodException e) {
-                plugin.getLogger().log(Level.SEVERE, "Tried to initialise legacy support but failed.", e);
-            }
-        }
-
         try {
             Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
         } catch (final ReflectiveOperationException e) {
@@ -55,7 +45,7 @@ public class Translator {
 
         this.plugin = plugin;
         this.adventure = adventure;
-        this.defaultLanguage = defaultLanguage;
+        this.defaultLanguage = getDefaultLanguage(defaultLanguage);
         this.debug = debug;
 
         if (adventure != null) {
@@ -75,6 +65,14 @@ public class Translator {
             this.watchService = new LanguageWatchService(hook);
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "[Languagy] Error whilst setting up file watch service", e);
+        }
+    }
+
+    private Language getDefaultLanguage(Language defaultLanguage) {
+        try {
+            return Language.getFromKey(LanguageKey.of(TritonAPI.getInstance().getLanguageManager().getMainLanguage().getName().toLowerCase())).orElse(defaultLanguage);
+        } catch (Throwable ex) {
+            return defaultLanguage;
         }
     }
 
@@ -322,16 +320,8 @@ public class Translator {
     }
 
     private String getLocale(final Player player) {
-        try {
-            return player.getLocale();
-        } catch (NoSuchMethodError e) {
-            try {
-                return (String) LEGACY_LOCALE_METHOD.invoke(player.spigot());
-            } catch (ReflectiveOperationException ex) {
-                plugin.getLogger().log(Level.SEVERE, "[Languagy] Failed to invoke legacy support", ex);
-            }
-        }
-        return "en_us";
+        // must be lowercase to line up Language class
+        return TritonAPI.getInstance().getPlayerManager().get(player.getUniqueId()).getLanguage().getName().toLowerCase();
     }
 
     private int getVersionNumber() {
