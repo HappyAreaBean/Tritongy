@@ -107,7 +107,8 @@ public enum Language {
     FRANCONIAN("vmf_de"),
     YORUBA("yo_ng"),
     CHINESE_SIMPLIFIED("zh_cn"),
-    CHINESE_TRADITIONAL("zh_tw");
+    CHINESE_TRADITIONAL_HONG_KONG("zh_hk"),
+    CHINESE_TRADITIONAL_TAIWAN("zh_tw");
 
     private final LanguageKey key;
 
